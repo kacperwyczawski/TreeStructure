@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using TreeStructure.Data;
+using TreeStructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +7,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddSqlite<NodesDbContext>("Data Source=Nodes.db");
+builder.Services.AddScoped<NodeService>();
 
 var app = builder.Build();
 
