@@ -3,14 +3,14 @@
 @inject NodeService NodeService
 
 <li>
-    @Node.Name
+    @RootNode.Name
     <!-- TODO: Fix this warning -->
-    @if (NodeService.GetChildren((int)Node.Id) is var children && children.Any())
+    @if (NodeService.GetChildren((int)RootNode.Id) is var children && children.Any())
     {
         <ul>
             @foreach (var child in children)
             {
-                <DisplayNodeAndChildrenRecursively Node="@child"/>
+                <Tree RootNode="@child"/>
             }
         </ul>
     }
@@ -19,6 +19,6 @@
 @code {
 
     [Parameter]
-    public Node Node { get; set; }
+    public Node RootNode { get; set; }
 
 }
