@@ -5,7 +5,6 @@
 @inject NodeService NodeService
 
 <!-- form for creating nodes -->
-
 <div class="mt-5 p-5 container rounded shadow">
     <form>
         <label for="nodeName" class="form-label">Node name:</label>
@@ -14,22 +13,49 @@
     </form>
 </div>
 
+<!-- tree structure -->
+@if (_rootNodes.Any())
+{
+    @foreach (var rootNode in _rootNodes)
+    {
+        <div class="mt-5 p-5 container rounded shadow">
+            <ul>
+                <DisplayNodeAndChildrenRecursively Node="@_rootNodes[0]"></DisplayNodeAndChildrenRecursively>
+            </ul>
+        </div>
+    }
+}
+else
+{
+    <div class="mt-5 p-5 container rounded shadow">
+        <p>Add some nodes to see the tree structure</p>
+    </div>
+}
+
 @code {
 
     private string? _nodeName;
 
     private int? _selectedNodeId;
 
+    private List<Node> _rootNodes = new();
+
     private void HandleSubmit()
     {
         if (_nodeName is null)
             return;
-        
-        // create node
+
+    // create node
         var node = new Node(_nodeName, null, _selectedNodeId);
-        
-        // add node to database
+
+    // add node to database
         NodeService.AddNode(node);
+    }
+
+    protected override void OnInitialized()
+    {
+    // get all nodes from database
+        _rootNodes = NodeService.GetRootNodes();
     }
 
 }
