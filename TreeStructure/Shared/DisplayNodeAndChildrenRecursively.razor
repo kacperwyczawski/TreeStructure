@@ -1,0 +1,24 @@
+﻿@using TreeStructure.Services
+@using TreeStructure.Models
+@inject NodeService NodeService
+
+<li>
+    @Node.Name
+    <!-- TODO: Fix this warning -->
+    @if (NodeService.GetChildren((int)Node.Id) is var children && children.Any())
+    {
+        <ul>
+            @foreach (var child in children)
+            {
+                <DisplayNodeRecursively Node="@child"/>
+            }
+        </ul>
+    }
+</li>
+
+@code {
+
+    [Parameter]
+    public Node Node { get; set; }
+
+}
