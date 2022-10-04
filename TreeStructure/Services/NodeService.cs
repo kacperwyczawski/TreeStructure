@@ -25,4 +25,35 @@ public class NodeService
             .AsNoTracking()
             .Where(x => x.ParentId == id).ToList();
     }
+    
+    public Node GetNode(int id)
+    {
+        return _context.Nodes
+            .AsNoTracking()
+            .FirstOrDefault(x => x.Id == id);
+    }
+    
+    public void UpdateNode(Node node)
+    {
+        _context.Nodes.Update(node);
+        _context.SaveChanges();
+    }
+    
+    public void DeleteNode(int id)
+    {
+        var node = _context.Nodes.FirstOrDefault(x => x.Id == id);
+        
+        if (node == null)
+            return;
+        
+        _context.Nodes.Remove(node);
+        _context.SaveChanges();
+    }
+    
+    public List<Node> GetAllNodes()
+    {
+        return _context.Nodes
+            .AsNoTracking()
+            .ToList();
+    }
 }
