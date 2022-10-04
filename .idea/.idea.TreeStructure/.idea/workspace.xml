@@ -5,11 +5,18 @@
     <projectFile profileName="TreeStructure">TreeStructure/TreeStructure.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1ef4a5d-1b49-472d-ba6a-156d79c01647" name="Changes" comment="Update workspace.xml" />
+    <list default="true" id="a1ef4a5d-1b49-472d-ba6a-156d79c01647" name="Changes" comment="Add NodesDbContext and remove WeatherForecast from Program.cs and Data/ directory" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/Users/Kacper/Desktop/Projects/TreeStructure/TreeStructure/Models/Node.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Kacper/Desktop/Projects/TreeStructure/TreeStructure/Program.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="SWEA" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -63,7 +70,35 @@
       <option name="project" value="LOCAL" />
       <updated>1664881991580</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Update workspace.xml">
+      <created>1664882064179</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1664882064179</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Remodel Node">
+      <created>1664882078189</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1664882078189</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add NuGet packages for EF Core and SQLite">
+      <created>1664882862132</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1664882862132</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add NodesDbContext and remove WeatherForecast from Program.cs and Data/ directory">
+      <created>1664882924430</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1664882924430</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
@@ -81,6 +116,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Update workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update workspace.xml" />
+    <MESSAGE value="Remodel Node" />
+    <MESSAGE value="Add NuGet packages for EF Core and SQLite" />
+    <MESSAGE value="Add NodesDbContext and remove WeatherForecast from Program.cs and Data/ directory" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add NodesDbContext and remove WeatherForecast from Program.cs and Data/ directory" />
   </component>
 </project>
