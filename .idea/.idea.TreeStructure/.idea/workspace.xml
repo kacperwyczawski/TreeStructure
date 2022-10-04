@@ -5,9 +5,9 @@
     <projectFile profileName="TreeStructure">TreeStructure/TreeStructure.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1ef4a5d-1b49-472d-ba6a-156d79c01647" name="Changes" comment="Create Nodes.db SQLite database">
-      <change afterPath="$PROJECT_DIR$/TreeStructure/Services/NodeService.cs" afterDir="false" />
+    <list default="true" id="a1ef4a5d-1b49-472d-ba6a-156d79c01647" name="Changes" comment="Add NodeService in Program.cs">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.TreeStructure/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TreeStructure/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TreeStructure/Pages/Counter.razor" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +16,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="mock://C:/Users/Kacper/Desktop/Projects/TreeStructure/TreeStructure/Models/Node.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Kacper/Desktop/Projects/TreeStructure/TreeStructure/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/Kacper/Desktop/Projects/TreeStructure/TreeStructure/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
@@ -27,7 +28,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
   }
 }]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.TreeStructure">
@@ -116,7 +117,21 @@
       <option name="project" value="LOCAL" />
       <updated>1664883291758</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Add NodeService">
+      <created>1664883854800</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1664883854800</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Add NodeService in Program.cs">
+      <created>1664884200929</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1664884200929</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
@@ -133,12 +148,16 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Update workspace.xml" />
     <MESSAGE value="Remodel Node" />
     <MESSAGE value="Add NuGet packages for EF Core and SQLite" />
     <MESSAGE value="Add NodesDbContext and remove WeatherForecast from Program.cs and Data/ directory" />
     <MESSAGE value="Remove FetchData page" />
     <MESSAGE value="Create Nodes.db SQLite database" />
-    <option name="LAST_COMMIT_MESSAGE" value="Create Nodes.db SQLite database" />
+    <MESSAGE value="Add NodeService" />
+    <MESSAGE value="Add NodeService in Program.cs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add NodeService in Program.cs" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
 </project>
