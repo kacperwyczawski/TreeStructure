@@ -5,7 +5,10 @@
     <projectFile profileName="TreeStructure">TreeStructure/TreeStructure.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1ef4a5d-1b49-472d-ba6a-156d79c01647" name="Changes" comment="Add NodesDbContext and remove WeatherForecast from Program.cs and Data/ directory" />
+    <list default="true" id="a1ef4a5d-1b49-472d-ba6a-156d79c01647" name="Changes" comment="Create Nodes.db SQLite database">
+      <change afterPath="$PROJECT_DIR$/TreeStructure/Services/NodeService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.TreeStructure/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TreeStructure/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,11 +24,12 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.TreeStructure">
     <configuration name="TreeStructure" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/TreeStructure/TreeStructure.csproj" />
@@ -98,7 +102,21 @@
       <option name="project" value="LOCAL" />
       <updated>1664882924430</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Remove FetchData page">
+      <created>1664883034167</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1664883034167</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Create Nodes.db SQLite database">
+      <created>1664883291758</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1664883291758</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
@@ -119,6 +137,8 @@
     <MESSAGE value="Remodel Node" />
     <MESSAGE value="Add NuGet packages for EF Core and SQLite" />
     <MESSAGE value="Add NodesDbContext and remove WeatherForecast from Program.cs and Data/ directory" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add NodesDbContext and remove WeatherForecast from Program.cs and Data/ directory" />
+    <MESSAGE value="Remove FetchData page" />
+    <MESSAGE value="Create Nodes.db SQLite database" />
+    <option name="LAST_COMMIT_MESSAGE" value="Create Nodes.db SQLite database" />
   </component>
 </project>
