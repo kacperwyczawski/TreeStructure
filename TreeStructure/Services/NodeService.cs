@@ -1,4 +1,5 @@
-﻿using TreeStructure.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TreeStructure.Data;
 using TreeStructure.Models;
 
 namespace TreeStructure.Services;
@@ -16,5 +17,12 @@ public class NodeService
     {
         _context.Nodes.Add(node);
         _context.SaveChanges();
+    }
+    
+    public List<Node> GetChildren(int id)
+    {
+        return _context.Nodes
+            .AsNoTracking()
+            .Where(x => x.ParentId == id).ToList();
     }
 }
