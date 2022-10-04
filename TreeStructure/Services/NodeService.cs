@@ -56,4 +56,11 @@ public class NodeService
             .AsNoTracking()
             .ToList();
     }
+
+    public List<Node> GetRootNodes()
+    {
+            return _context.Nodes
+            .AsNoTracking()
+            .Where(x => x.ParentId == null).ToList();
+    }
 }
