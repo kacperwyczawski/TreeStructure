@@ -1,0 +1,48 @@
+<div class="border rounded mt-2 p-2 d-flex align-items-center">
+    <div class="p-1">
+        <img src="img/@(IsCollapsed ? "expand.svg" : "collapse.svg")" alt="expand"/>
+    </div>
+    <div class="p-1">
+        <span>@Text</span>
+    </div>
+    <div class="p-1 flex-grow-1">
+        <span class="text-muted">#@Id</span>
+    </div>
+    <div class="p-1">
+        <img src="img/edit.svg" alt="edit"/>
+    </div>
+    <div class="p-1">
+        <img src="img/move.svg" alt="move"/>
+    </div>
+    <div class="p-1">
+        <img src="img/delete.svg" alt="delete"/>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string? Text { get; set; }
+
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public bool IsCollapsed { get; set; }
+
+    [Parameter]
+    public EventCallback OnExpand { get; set; }
+
+    [Parameter]
+    public EventCallback OnCollapse { get; set; }
+
+    [Parameter]
+    public EventCallback OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback OnEdit { get; set; }
+
+    [Parameter]
+    public EventCallback OnMove { get; set; }
+
+}
