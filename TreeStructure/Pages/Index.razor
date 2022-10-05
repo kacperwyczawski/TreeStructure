@@ -7,21 +7,21 @@
 <!-- form for creating nodes -->
 <div class="mt-5 p-5 container rounded shadow">
     <form>
-        <div class="mb-3">
-            <label for="nodeName" class="form-label">Node name:</label>
-            <input type="text" class="form-control" id="nodeName" @bind="_nodeName">
+        <div class="mb-3 form-floating">
+            <input type="text" class="form-control" id="nodeName" @bind="_nodeName" placeholder="example name">
+            <label for="nodeName">Node name:</label>
         </div>
         <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="addAsRoot" @bind="_addAsRoot">
             <label class="form-check-label" for="addAsRoot">Add as root</label>
         </div>
-        <div class="mb-3">
-            @if (!_addAsRoot)
-            {
-                <label for="parentNodeId" class="form-label">Parent node id:</label>
-                <input type="number" class="form-control" id="parentNodeId" @bind="_selectedNodeId"/>
-            }
-        </div>
+        @if (!_addAsRoot)
+        {
+            <div class="mb-3  form-floating">
+                <input type="number" class="form-control" id="parentNodeId" @bind="_selectedNodeId" placeholder="42"/>
+                <label for="parentNodeId">Parent node id:</label>
+            </div>
+        }
         <div class="mb-3">
             <button type="submit" class="btn btn-primary mt-3" @onclick="HandleSubmit">Add node</button>
         </div>
@@ -61,7 +61,7 @@ else
     {
         if (_nodeName is null)
             return;
-        
+
         if (!_addAsRoot && _selectedNodeId is null)
             return;
 
