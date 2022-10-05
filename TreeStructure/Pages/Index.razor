@@ -4,6 +4,46 @@
 
 @inject NodeService NodeService
 
+<!-- Modal for renaming nodes -->
+@if (_showNodeEditDialog)
+{
+    <div class="modal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        Edit node
+                        <span class="text-primary">@_nodeToEdit.Name</span>
+                        <span class="text-muted">#@_nodeToEdit.Id</span>
+                    </h3>
+                    <button type="button" class="btn-close" @onclick="@ModalCancel"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form>
+                        <label for="newNodeName" class="form-label">New node name:</label>
+                        <input type="text"
+                               class="form-control"
+                               id="newNodeName"
+                               @bind="_newNodeName"
+                               placeholder="@_nodeToEdit.Name">
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" @onclick="@ModalCancel">Cancel</button>
+                    <button type="button" class="btn btn-primary" @onclick=@ModalRename>Rename</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
 <!-- form for creating nodes -->
 <div class="mt-5 p-5 container rounded shadow">
     <form>
@@ -35,7 +75,7 @@
     {
         <div class="mt-5 p-5 container rounded shadow">
             <ul>
-                <Tree RootNode="@rootNode"></Tree>
+                <Tree RootNode="@rootNode" OnEdit="OnNodeEdit"/>
             </ul>
         </div>
     }
@@ -49,15 +89,21 @@ else
 
 @code {
 
-    private string? _nodeName;
+    string? _nodeName;
 
-    private int? _selectedNodeId;
+    string? _newNodeName;
 
-    private bool _addAsRoot;
+    int? _selectedNodeId;
 
-    private List<Node> _rootNodes = new();
+    bool _addAsRoot;
 
-    private void HandleSubmit()
+    List<Node> _rootNodes = new();
+
+    bool _showNodeEditDialog;
+
+    Node? _nodeToEdit;
+
+    void HandleSubmit()
     {
         if (_nodeName is null)
             return;
@@ -72,10 +118,34 @@ else
         NodeService.AddNode(node);
     }
 
+    void OnNodeEdit(Node node)
+    {
+        _showNodeEditDialog = true;
+        _nodeToEdit = node;
+    }
+
     protected override void OnInitialized()
     {
     // get all nodes from database
         _rootNodes = NodeService.GetRootNodes();
+    }
+
+    private void ModalCancel()
+    {
+        _showNodeEditDialog = false;
+        _nodeToEdit = null;
+    }
+
+    private void ModalRename()
+    {
+        _showNodeEditDialog = false;
+        
+        if (_newNodeName == null)
+            return;
+        
+        var newNode = _nodeToEdit with { Name = _newNodeName };
+        
+        NodeService.UpdateNode(newNode);
     }
 
 }

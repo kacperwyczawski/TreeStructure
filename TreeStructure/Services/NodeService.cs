@@ -35,6 +35,7 @@ public class NodeService
     
     public void UpdateNode(Node node)
     {
+        // TODO: make it work
         _context.Nodes.Update(node);
         _context.SaveChanges();
     }

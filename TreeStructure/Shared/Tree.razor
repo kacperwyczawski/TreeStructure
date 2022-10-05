@@ -8,13 +8,15 @@
               Id="@((int)RootNode.Id)"
               OnCollapse="@(() => IsCollapsed = true)"
               OnExpand="@(() => IsCollapsed = false)"
+              OnDelete="@(() => NodeService.DeleteNode((int)RootNode.Id))"
+              OnEdit="@HandleEdit"
               IsCollapsed="IsCollapsed"/>
     @if (NodeService.GetChildren((int)RootNode.Id) is var children && children.Any() && !IsCollapsed)
     {
         <ul>
             @foreach (var child in children)
             {
-                <Tree RootNode="@child"/>
+                <Tree RootNode="@child" OnEdit="@OnEdit"/>
             }
         </ul>
     }
@@ -27,5 +29,15 @@
 
     [Parameter]
     public bool IsCollapsed { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<Node> OnEdit { get; set; }
+
+    void HandleEdit()
+    {
+        OnEdit.InvokeAsync(RootNode);
+    }
+
+    bool _showEditDialog = false;
 
 }
