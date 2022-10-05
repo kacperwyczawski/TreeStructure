@@ -68,6 +68,30 @@
     </form>
 </div>
 
+<!-- Buttons -->
+<div class="mt-5 p-5 container rounded shadow">
+    <button type="button" class="btn btn-dark">
+        <img src="img/sort-white.svg" alt="sort"/>
+        Sort
+    </button>
+    <button type="button" class="btn btn-dark">
+        <img src="img/delete-white.svg" alt="delete"/>
+        Delete all
+    </button>
+    <button type="button" class="btn btn-dark">
+        <img src="img/sample-data-white.svg" alt="sample-data"/>
+        Sample data
+    </button>
+    <button type="button" class="btn btn-dark">
+        <img src="img/collapse-white.svg" alt="collapse"/>
+        Collapse all
+    </button>
+    <button type="button" class="btn btn-dark">
+        <img src="img/expand-white.svg" alt="expand"/>
+        Expand all
+    </button>
+</div>
+
 <!-- tree structure -->
 @if (_rootNodes.Any())
 {
@@ -139,12 +163,12 @@ else
     private void ModalRename()
     {
         _showNodeEditDialog = false;
-        
+
         if (_newNodeName == null)
             return;
-        
+
         var newNode = _nodeToEdit with { Name = _newNodeName };
-        
+
         NodeService.UpdateNode(newNode);
     }
 
