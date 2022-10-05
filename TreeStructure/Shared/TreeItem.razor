@@ -20,13 +20,19 @@
         <span class="text-muted">#@Id</span>
     </div>
     <div class="p-1">
-        <img src="img/edit.svg" alt="edit"/>
+        <a @onclick="OnEdit">
+            <img src="img/edit.svg" alt="edit"/>
+        </a>
     </div>
     <div class="p-1">
-        <img src="img/move.svg" alt="move"/>
+        <a @onclick="OnMove">
+            <img src="img/move.svg" alt="move"/>
+        </a>
     </div>
     <div class="p-1">
-        <img src="img/delete.svg" alt="delete"/>
+        <a @onclick="OnDelete">
+            <img src="img/delete.svg" alt="delete"/>
+        </a>
     </div>
 </div>
 
