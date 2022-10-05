@@ -2,7 +2,7 @@
 @using TreeStructure.Models
 @inject NodeService NodeService
 
-<li>
+<li style="list-style-type: none">
     <p>@RootNode.Name <span class="text-muted">#@RootNode.Id</span></p>
     <!-- TODO: Fix this warning -->
     @if (NodeService.GetChildren((int)RootNode.Id) is var children && children.Any())
