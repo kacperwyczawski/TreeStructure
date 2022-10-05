@@ -45,7 +45,7 @@
 }
 
 <!-- form for creating nodes -->
-<div class="mt-5 p-5 container rounded shadow">
+<div class="my-4 p-4 container rounded shadow">
     <form>
         <div class="mb-3 form-floating">
             <input type="text" class="form-control" id="nodeName" @bind="_nodeName" placeholder="example name">
@@ -69,27 +69,37 @@
 </div>
 
 <!-- Buttons -->
-<div class="mt-5 p-5 container rounded shadow">
-    <button type="button" class="btn btn-dark">
-        <img src="img/sort-white.svg" alt="sort"/>
-        Sort
-    </button>
-    <button type="button" class="btn btn-dark">
-        <img src="img/delete-white.svg" alt="delete"/>
-        Delete all
-    </button>
-    <button type="button" class="btn btn-dark">
-        <img src="img/sample-data-white.svg" alt="sample-data"/>
-        Sample data
-    </button>
-    <button type="button" class="btn btn-dark">
-        <img src="img/collapse-white.svg" alt="collapse"/>
-        Collapse all
-    </button>
-    <button type="button" class="btn btn-dark">
-        <img src="img/expand-white.svg" alt="expand"/>
-        Expand all
-    </button>
+<div class="my-4 p-4 container rounded shadow d-flex flex-wrap">
+    <div class="p-2">
+        <button type="button" class="btn btn-dark text-nowrap">
+            <img src="img/sort-white.svg" alt="sort"/>
+            Sort
+        </button>
+    </div>
+    <div class="p-2">
+        <button type="button" class="btn btn-dark text-nowrap">
+            <img src="img/delete-white.svg" alt="delete"/>
+            Delete all
+        </button>
+    </div>
+    <div class="p-2">
+        <button type="button" class="btn btn-dark text-nowrap">
+            <img src="img/sample-data-white.svg" alt="sample-data"/>
+            Sample data
+        </button>
+    </div>
+    <div class="p-2">
+        <button type="button" class="btn btn-dark text-nowrap">
+            <img src="img/collapse-white.svg" alt="collapse"/>
+            Collapse all
+        </button>
+    </div>
+    <div class="p-2">
+        <button type="button" class="btn btn-dark text-nowrap">
+            <img src="img/expand-white.svg" alt="expand"/>
+            Expand all
+        </button>
+    </div>
 </div>
 
 <!-- tree structure -->
@@ -97,7 +107,7 @@
 {
     @foreach (var rootNode in _rootNodes)
     {
-        <div class="mt-5 p-5 container rounded shadow">
+        <div class="my-4 p-4 ps-0 container rounded shadow">
             <ul>
                 <Tree RootNode="@rootNode" OnEdit="OnNodeEdit"/>
             </ul>
@@ -106,8 +116,13 @@
 }
 else
 {
-    <div class="mt-5 p-5 container rounded shadow">
-        <p>Add some nodes to see the tree structure</p>
+    <div class="my-4 p-4 container rounded shadow d-flex justify-content-center">
+        <div class="p-2">
+            <img src="img/info.svg" alt="info"/>
+        </div>
+        <div class="p-2">
+            <p>Add some nodes to see the tree structure</p>
+        </div>
     </div>
 }
 
