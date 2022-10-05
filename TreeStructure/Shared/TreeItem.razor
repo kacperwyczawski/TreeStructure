@@ -1,6 +1,17 @@
 <div class="border rounded mt-2 p-2 d-flex align-items-center">
     <div class="p-1">
-        <img src="img/@(IsCollapsed ? "expand.svg" : "collapse.svg")" alt="expand"/>
+        @if (IsCollapsed)
+        {
+            <a @onclick="OnExpand">
+                <img src="img/expand.svg" alt="expand"/>
+            </a>
+        }
+        else
+        {
+            <a @onclick="OnCollapse">
+                <img src="img/collapse.svg" alt="collapse"/>
+            </a>
+        }
     </div>
     <div class="p-1">
         <span>@Text</span>
