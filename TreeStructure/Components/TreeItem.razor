@@ -1,16 +1,23 @@
 <div class="border rounded mt-2 p-2 d-flex align-items-center">
     <div class="p-1">
-        @if (IsCollapsed)
+        @if (CanBeExpanded)
         {
-            <a @onclick="OnExpand">
-                <img src="img/expand.svg" alt="expand"/>
-            </a>
+            @if (IsCollapsed)
+            {
+                <a @onclick="OnExpand">
+                    <img src="img/expand.svg" alt="expand"/>
+                </a>
+            }
+            else
+            {
+                <a @onclick="OnCollapse">
+                    <img src="img/collapse.svg" alt="collapse"/>
+                </a>
+            }
         }
         else
         {
-            <a @onclick="OnCollapse">
-                <img src="img/collapse.svg" alt="collapse"/>
-            </a>
+            <img src="img/expand.svg" alt="expand" style="opacity: 0.25;"/>
         }
     </div>
     <div class="p-1">
@@ -46,6 +53,9 @@
 
     [Parameter]
     public bool IsCollapsed { get; set; }
+
+    [Parameter]
+    public bool CanBeExpanded { get; set; } = true;
 
     [Parameter]
     public EventCallback OnExpand { get; set; }

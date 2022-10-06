@@ -9,7 +9,8 @@
               OnExpand="@(() => _isCollapsed = false)"
               OnDelete="@(() => OnDelete.InvokeAsync(Node))"
               OnEdit="@(() => OnEdit.InvokeAsync(Node))"
-              IsCollapsed="@_isCollapsed"/>
+              IsCollapsed="@_isCollapsed"
+              CanBeExpanded="@NodeService.HasChildren((int)Node.Id)"/>
     @if (GetSortedChildren() is var children && children.Any() && !_isCollapsed)
     {
         <ol>
