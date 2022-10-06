@@ -7,7 +7,7 @@
               Id="@((int)Node.Id)"
               OnCollapse="@(() => IsCollapsed = true)"
               OnExpand="@(() => IsCollapsed = false)"
-              OnDelete="@OnDelete"
+              OnDelete="@(() => OnDelete.InvokeAsync(Node))"
               OnEdit="@(() => OnEdit.InvokeAsync(Node))"
               IsCollapsed="@IsCollapsed"/>
     @if (GetSortedChildren() is var children && children.Any() && !IsCollapsed)
@@ -18,7 +18,7 @@
                 <Tree
                     Node="@child"
                     OnEdit="@OnEdit"
-                    OnConfirmDelete="@OnConfirmDelete"
+                    OnDelete="@OnDelete"
                     SortAscending="@SortAscending"
                     SortDescending="@SortDescending"/>
             }
@@ -38,7 +38,7 @@
     public EventCallback<Node> OnEdit { get; set; }
 
     [Parameter]
-    public EventCallback<Node> OnConfirmDelete { get; set; }
+    public EventCallback<Node> OnDelete { get; set; }
 
     [Parameter]
     public bool SortAscending { get; set; }
@@ -56,22 +56,6 @@
             (true, false) => children.OrderBy(x => x.Name).ToList(),
             (false, true) => children.OrderByDescending(x => x.Name).ToList(),
             (false, false) or (true, true) => children };
-    }
-
-    void OnDelete()
-    {
-        var hasChildren = NodeService.GetChildren((int)Node.Id).Any();
-
-        if (hasChildren)
-        {
-            OnConfirmDelete.InvokeAsync(Node);
-        }
-        else
-        {
-            NodeService.DeleteNodeWithChildren(Node);
-            StateHasChanged();
-        }
-            
     }
 
 }

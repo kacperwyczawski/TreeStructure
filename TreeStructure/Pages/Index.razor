@@ -27,16 +27,16 @@
     OnSampleData="@(() => { NodeService.DeleteAllNodes(); NodeService.Seed(); })"/>
 
 <!-- tree structure -->
-@if (_rootNodes.Any())
+@if (RootNodes.Any())
 {
-    @foreach (var rootNode in _rootNodes)
+    @foreach (var rootNode in RootNodes)
     {
         <div class="my-4 p-4 ps-0 container rounded shadow">
             <ol>
                 <Tree
                     Node="@rootNode"
                     OnEdit="@OnNodeEdit"
-                    OnConfirmDelete="@OnConfirmNodeWithChildrenDelete"
+                    OnDelete="@OnDelete"
                     SortAscending="@_sortAscending"
                     SortDescending="@_sortDescending"/>
             </ol>
@@ -61,7 +61,7 @@ else
     
     bool _sortDescending;
 
-    List<Node> _rootNodes = new();
+    List<Node> RootNodes => NodeService.GetRootNodes();
 
     bool _showNodeEditDialog;
     
@@ -77,16 +77,20 @@ else
         _nodeToEdit = node;
     }
     
-    void OnConfirmNodeWithChildrenDelete(Node node)
+    void OnDelete(Node node)
     {
-        _showDeleteNodeWithChildrenDialog = true;
-        _nodeToDelete = node;
-    }
+        var hasChildren = NodeService.GetChildren((int)node.Id).Any();
 
-    protected override void OnInitialized()
-    {
-    // get all nodes from database
-        _rootNodes = NodeService.GetRootNodes();
+        if (hasChildren)
+        {
+            _showDeleteNodeWithChildrenDialog = true;
+            _nodeToDelete = node;
+        }
+        else
+        {
+            NodeService.DeleteNodeWithChildren(node);
+            StateHasChanged();
+        }
     }
 
 }
