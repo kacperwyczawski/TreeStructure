@@ -109,9 +109,10 @@ else
         if (_newNodeName == null)
             return;
 
-        var newNode = _nodeToEdit with { Name = _newNodeName };
-
-        NodeService.UpdateNode(newNode);
+        NodeService.RenameNode((int)_nodeToEdit.Id, _newNodeName);
+        
+        _nodeToEdit = null;
+        _newNodeName = null;
     }
 
 }

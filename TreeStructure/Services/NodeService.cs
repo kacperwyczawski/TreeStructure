@@ -33,10 +33,13 @@ public class NodeService
             .FirstOrDefault(x => x.Id == id);
     }
     
-    public void UpdateNode(Node node)
+    public void RenameNode(int id, string name)
     {
-        // TODO: make it work
-        _context.Nodes.Update(node);
+        var oldNode = GetNode(id);
+        var newNode = oldNode with { Name = name };
+
+        _context.Nodes.Remove(oldNode);
+        _context.Nodes.Add(newNode);
         _context.SaveChanges();
     }
     
