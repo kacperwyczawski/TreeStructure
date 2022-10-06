@@ -51,6 +51,31 @@ public class NodeService
         _context.SaveChanges();
     }
     
+    public void DeleteAllNodes()
+    {
+        _context.Nodes.RemoveRange(_context.Nodes);
+        _context.SaveChanges();
+    }
+    
+    public void Seed()
+    {
+        _context.Nodes.AddRange(new List<Node>
+        {
+            new ("Pineapple", 0, null),
+            new ("Apple", 1, 0),
+            new ("Banana", 2, 0),
+            new ("Orange", 3, 0),
+            new ("Peach", 4, 2),
+            new ("Pear", 5, 2),
+            
+            new ("Lime", 6, null),
+            new ("Lemon", 7, 6),
+            new ("Grapefruit", 8, 6),
+            new ("Mango", 9, 7)
+        });
+        _context.SaveChanges();
+    }
+    
     public List<Node> GetAllNodes()
     {
         return _context.Nodes

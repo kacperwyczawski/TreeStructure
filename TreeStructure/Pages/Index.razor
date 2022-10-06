@@ -68,7 +68,9 @@
     </form>
 </div>
 
-<Buttons />
+<Buttons
+    OnDeleteAll="@(() => NodeService.DeleteAllNodes())"
+    OnSampleData="@(() => {NodeService.DeleteAllNodes(); NodeService.Seed();})"/>
 
 <!-- tree structure -->
 @if (_rootNodes.Any())
