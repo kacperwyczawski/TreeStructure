@@ -1,0 +1,70 @@
+@using TreeStructure.Services
+@using TreeStructure.Models
+@inject NodeService NodeService
+
+<div class="modal" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Edit node
+                    <span class="text-primary">@Node!.Name</span>
+                    <span class="text-muted">#@Node!.Id</span>
+                </h3>
+                <button type="button" class="btn-close" @onclick="@OnClose"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form>
+                    <label for="newNodeName" class="form-label">New node name:</label>
+                    <input type="text"
+                           class="form-control"
+                           id="newNodeName"
+                           @bind="_newNodeName"
+                           placeholder="@Node.Name">
+                </form>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" @onclick="@OnClose">Cancel</button>
+                <button type="button" class="btn btn-primary" @onclick="@OnRename">Rename</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public Node? Node { get; set; }
+
+    string? _newNodeName;
+
+    void OnRename()
+    {
+        if (_newNodeName is null)
+            return;
+        
+        NodeService.RenameNode((int)Node!.Id, _newNodeName);
+        
+        OnClose.InvokeAsync();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (Node is null)
+            throw new ArgumentNullException(nameof(Node));
+    }
+
+}

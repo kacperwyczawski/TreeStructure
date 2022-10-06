@@ -4,44 +4,11 @@
 
 @inject NodeService NodeService
 
-<!-- Modal for renaming nodes -->
 @if (_showNodeEditDialog)
 {
-    <div class="modal" style="display:block" aria-modal="true" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h3 class="modal-title">
-                        Edit node
-                        <span class="text-primary">@_nodeToEdit.Name</span>
-                        <span class="text-muted">#@_nodeToEdit.Id</span>
-                    </h3>
-                    <button type="button" class="btn-close" @onclick="@ModalCancel"></button>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <form>
-                        <label for="newNodeName" class="form-label">New node name:</label>
-                        <input type="text"
-                               class="form-control"
-                               id="newNodeName"
-                               @bind="_newNodeName"
-                               placeholder="@_nodeToEdit.Name">
-                    </form>
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" @onclick="@ModalCancel">Cancel</button>
-                    <button type="button" class="btn btn-primary" @onclick=@ModalRename>Rename</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
+    <RenameNodeDialog 
+        Node="_nodeToEdit" 
+        OnClose="@(() => { _showNodeEditDialog = false; _nodeToEdit = null; })"/>
 }
 
 <NodeForm OnAddNode="@(n => NodeService.AddNode(n))"/>
@@ -75,8 +42,6 @@ else
 }
 
 @code {
-    
-    string? _newNodeName;
 
     List<Node> _rootNodes = new();
 
@@ -94,25 +59,6 @@ else
     {
     // get all nodes from database
         _rootNodes = NodeService.GetRootNodes();
-    }
-
-    private void ModalCancel()
-    {
-        _showNodeEditDialog = false;
-        _nodeToEdit = null;
-    }
-
-    private void ModalRename()
-    {
-        _showNodeEditDialog = false;
-
-        if (_newNodeName == null)
-            return;
-
-        NodeService.RenameNode((int)_nodeToEdit.Id, _newNodeName);
-        
-        _nodeToEdit = null;
-        _newNodeName = null;
     }
 
 }
