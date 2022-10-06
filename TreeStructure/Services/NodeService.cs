@@ -43,14 +43,21 @@ public class NodeService
         _context.SaveChanges();
     }
     
-    public void DeleteNode(int id)
+    public void DeleteNodeWithChildren(Node? node)
     {
-        var node = _context.Nodes.FirstOrDefault(x => x.Id == id);
-        
-        if (node == null)
+        if (node is null)
             return;
-        
+
         _context.Nodes.Remove(node);
+        
+        if (GetChildren((int)node.Id) is var children && children.Any())
+        {
+            foreach (var child in children)
+            {
+                DeleteNodeWithChildren(child);
+            }
+        }
+        
         _context.SaveChanges();
     }
     

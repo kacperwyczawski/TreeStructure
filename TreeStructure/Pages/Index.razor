@@ -7,8 +7,14 @@
 @if (_showNodeEditDialog)
 {
     <RenameNodeDialog 
-        Node="_nodeToEdit" 
+        Node="@_nodeToEdit" 
         OnClose="@(() => { _showNodeEditDialog = false; _nodeToEdit = null; })"/>
+}
+
+@if (_showDeleteNodeWithChildrenDialog && _nodeToDelete is not null)
+{
+    <DeleteNodeWithChildrenDialog Node="@_nodeToDelete" 
+        OnClose="@(() => { _showDeleteNodeWithChildrenDialog = false; _nodeToDelete = null; })"/>
 }
 
 <NodeForm OnAddNode="@(n => NodeService.AddNode(n))"/>
@@ -29,8 +35,9 @@
         <div class="my-4 p-4 ps-0 container rounded shadow">
             <ol>
                 <Tree
-                    RootNode="@rootNode"
-                    OnEdit="OnNodeEdit"
+                    Node="@rootNode"
+                    OnEdit="@OnNodeEdit"
+                    OnConfirmDelete="@OnConfirmNodeWithChildrenDelete"
                     SortAscending="@_sortAscending"
                     SortDescending="@_sortDescending"/>
             </ol>
@@ -58,13 +65,23 @@ else
     List<Node> _rootNodes = new();
 
     bool _showNodeEditDialog;
+    
+    bool _showDeleteNodeWithChildrenDialog;
 
     Node? _nodeToEdit;
+
+    Node? _nodeToDelete;
 
     void OnNodeEdit(Node node)
     {
         _showNodeEditDialog = true;
         _nodeToEdit = node;
+    }
+    
+    void OnConfirmNodeWithChildrenDelete(Node node)
+    {
+        _showDeleteNodeWithChildrenDialog = true;
+        _nodeToDelete = node;
     }
 
     protected override void OnInitialized()

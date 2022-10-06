@@ -4,21 +4,22 @@
 
 <li style="list-style-type: none">
     <!-- TODO: Fix this warnings -->
-    <TreeItem Text="@RootNode.Name"
-              Id="@((int)RootNode.Id)"
+    <TreeItem Text="@Node.Name"
+              Id="@((int)Node.Id)"
               OnCollapse="@(() => IsCollapsed = true)"
               OnExpand="@(() => IsCollapsed = false)"
-              OnDelete="@(() => NodeService.DeleteNode((int)RootNode.Id))"
-              OnEdit="@(() => OnEdit.InvokeAsync(RootNode))"
-              IsCollapsed="IsCollapsed"/>
+              OnDelete="@OnDelete"
+              OnEdit="@(() => OnEdit.InvokeAsync(Node))"
+              IsCollapsed="@IsCollapsed"/>
     @if (GetSortedChildren() is var children && children.Any() && !IsCollapsed)
     {
         <ol>
             @foreach (var child in children)
             {
-                <Tree 
-                    RootNode="@child" 
+                <Tree
+                    Node="@child"
                     OnEdit="@OnEdit"
+                    OnConfirmDelete="@OnConfirmDelete"
                     SortAscending="@SortAscending"
                     SortDescending="@SortDescending"/>
             }
@@ -29,13 +30,16 @@
 @code {
 
     [Parameter]
-    public Node RootNode { get; set; }
+    public Node Node { get; set; }
 
     [Parameter]
     public bool IsCollapsed { get; set; } = true;
 
     [Parameter]
     public EventCallback<Node> OnEdit { get; set; }
+
+    [Parameter]
+    public EventCallback<Node> OnConfirmDelete { get; set; }
 
     [Parameter]
     public bool SortAscending { get; set; }
@@ -47,12 +51,28 @@
 
     List<Node> GetSortedChildren()
     {
-        var children = NodeService.GetChildren((int)RootNode.Id);
+        var children = NodeService.GetChildren((int)Node.Id);
 
         return (SortAscending, SortDescending) switch {
             (true, false) => children.OrderBy(x => x.Name).ToList(),
             (false, true) => children.OrderByDescending(x => x.Name).ToList(),
             (false, false) or (true, true) => children };
+    }
+
+    void OnDelete()
+    {
+        var hasChildren = NodeService.GetChildren((int)Node.Id).Any();
+
+        if (hasChildren)
+        {
+            OnConfirmDelete.InvokeAsync(Node);
+        }
+        else
+        {
+            NodeService.DeleteNodeWithChildren(Node);
+            StateHasChanged();
+        }
+            
     }
 
 }
