@@ -1,7 +1,13 @@
 # Tree Structure
 
-how to use:
+### required to run:
+
+- .NET 6 SDK (`winget install dotnet-sdk-6.0`)
+- .NET EF Core Tools (`dotnet tool install --global dotnet-ef`)
+
+### how to run:
 
 1. `git clone <repository link> TreeStructure`
 2. `cd TreeStructure`
-3. `dotnet run`
+3. `dotnet ef database update`
+4. `dotnet run`
