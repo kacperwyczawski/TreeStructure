@@ -1,14 +1,26 @@
 <div class="my-4 p-4 container rounded shadow d-flex flex-wrap">
     <div class="p-2">
-        <button type="button" class="btn btn-dark text-nowrap" @onclick="OnSortAscending">
+        <button type="button" class="btn btn-dark text-nowrap position-relative" @onclick="OnSortAscending">
             <img src="img/sort-ascending-white.svg" alt="sort"/>
             Sort ascending
+            @if (IsSortAscending)
+            {
+                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-primary rounded-circle">
+                    <span class="visually-hidden">Selected</span>
+                </span>
+            }
         </button>
     </div>
     <div class="p-2">
-        <button type="button" class="btn btn-dark text-nowrap" @onclick="OnSortDescending">
+        <button type="button" class="btn btn-dark text-nowrap position-relative" @onclick="OnSortDescending">
             <img src="img/sort-descending-white.svg" alt="sort"/>
             Sort descending
+            @if (IsSortDescending)
+            {
+                <span class="position-absolute top-0 start-100 translate-middle p-2 bg-primary rounded-circle">
+                    <span class="visually-hidden">Selected</span>
+                </span>
+            }
         </button>
     </div>
     <div class="p-2">
@@ -56,5 +68,11 @@
 
     [Parameter]
     public EventCallback OnExpandAll { get; set; }
+
+    [Parameter]
+    public bool IsSortAscending { get; set; }
+    
+    [Parameter]
+    public bool IsSortDescending { get; set; }
 
 }
