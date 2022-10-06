@@ -8,6 +8,6 @@
 ### how to run:
 
 1. `git clone <repository link> TreeStructure`
-2. `cd TreeStructure`
+2. `cd TreeStructure\TreeStructure`
 3. `dotnet ef database update`
 4. `dotnet run`
