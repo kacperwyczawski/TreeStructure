@@ -82,13 +82,16 @@ public class NodeService
             new ("Apple", 1, 0),
             new ("Banana", 2, 0),
             new ("Orange", 3, 0),
+            new ("Cherry", 12, 0),
             new ("Peach", 4, 2),
             new ("Pear", 5, 2),
+            new ("Strawberry", 6, 5),
             
-            new ("Lime", 6, null),
-            new ("Lemon", 7, 6),
-            new ("Grapefruit", 8, 6),
-            new ("Mango", 9, 7)
+            new ("Lime", 7, null),
+            new ("Lemon", 8, 7),
+            new ("Grapefruit", 9, 8),
+            new ("Mango", 10, 8),
+            new ("Papaya", 11, 7),
         });
         _context.SaveChanges();
     }
