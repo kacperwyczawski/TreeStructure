@@ -79,9 +79,7 @@ else
     
     void OnDelete(Node node)
     {
-        var hasChildren = NodeService.GetChildren((int)node.Id).Any();
-
-        if (hasChildren)
+        if (NodeService.HasChildren((int)node.Id))
         {
             _showDeleteNodeWithChildrenDialog = true;
             _nodeToDelete = node;

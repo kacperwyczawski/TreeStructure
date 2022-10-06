@@ -26,6 +26,13 @@ public class NodeService
             .Where(x => x.ParentId == id).ToList();
     }
     
+    public bool HasChildren(int id)
+    {
+        return _context.Nodes
+            .AsNoTracking()
+            .Any(x => x.ParentId == id);
+    }
+    
     public Node GetNode(int id)
     {
         return _context.Nodes
