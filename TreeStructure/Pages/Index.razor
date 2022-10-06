@@ -14,6 +14,10 @@
 <NodeForm OnAddNode="@(n => NodeService.AddNode(n))"/>
 
 <Buttons
+    IsSortAscending="@_sortAscending"
+    IsSortDescending="@_sortDescending"
+    OnSortAscending="@(() => { _sortAscending = !_sortAscending; _sortDescending = false; })"
+    OnSortDescending="@(() => { _sortDescending = !_sortDescending; _sortAscending = false; })"
     OnDeleteAll="@(() => NodeService.DeleteAllNodes())"
     OnSampleData="@(() => { NodeService.DeleteAllNodes(); NodeService.Seed(); })"/>
 
@@ -23,9 +27,13 @@
     @foreach (var rootNode in _rootNodes)
     {
         <div class="my-4 p-4 ps-0 container rounded shadow">
-            <ul>
-                <Tree RootNode="@rootNode" OnEdit="OnNodeEdit"/>
-            </ul>
+            <ol>
+                <Tree
+                    RootNode="@rootNode"
+                    OnEdit="OnNodeEdit"
+                    SortAscending="@_sortAscending"
+                    SortDescending="@_sortDescending"/>
+            </ol>
         </div>
     }
 }
@@ -42,6 +50,10 @@ else
 }
 
 @code {
+
+    bool _sortAscending;
+    
+    bool _sortDescending;
 
     List<Node> _rootNodes = new();
 

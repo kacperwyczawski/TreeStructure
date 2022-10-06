@@ -11,14 +11,18 @@
               OnDelete="@(() => NodeService.DeleteNode((int)RootNode.Id))"
               OnEdit="@(() => OnEdit.InvokeAsync(RootNode))"
               IsCollapsed="IsCollapsed"/>
-    @if (NodeService.GetChildren((int)RootNode.Id) is var children && children.Any() && !IsCollapsed)
+    @if (GetSortedChildren() is var children && children.Any() && !IsCollapsed)
     {
-        <ul>
+        <ol>
             @foreach (var child in children)
             {
-                <Tree RootNode="@child" OnEdit="@OnEdit"/>
+                <Tree 
+                    RootNode="@child" 
+                    OnEdit="@OnEdit"
+                    SortAscending="@SortAscending"
+                    SortDescending="@SortDescending"/>
             }
-        </ul>
+        </ol>
     }
 </li>
 
@@ -33,6 +37,22 @@
     [Parameter]
     public EventCallback<Node> OnEdit { get; set; }
 
+    [Parameter]
+    public bool SortAscending { get; set; }
+
+    [Parameter]
+    public bool SortDescending { get; set; }
+
     bool _showEditDialog = false;
+
+    List<Node> GetSortedChildren()
+    {
+        var children = NodeService.GetChildren((int)RootNode.Id);
+
+        return (SortAscending, SortDescending) switch {
+            (true, false) => children.OrderBy(x => x.Name).ToList(),
+            (false, true) => children.OrderByDescending(x => x.Name).ToList(),
+            (false, false) or (true, true) => children };
+    }
 
 }
