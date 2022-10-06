@@ -9,7 +9,7 @@
               OnCollapse="@(() => IsCollapsed = true)"
               OnExpand="@(() => IsCollapsed = false)"
               OnDelete="@(() => NodeService.DeleteNode((int)RootNode.Id))"
-              OnEdit="@HandleEdit"
+              OnEdit="@(() => OnEdit.InvokeAsync(RootNode))"
               IsCollapsed="IsCollapsed"/>
     @if (NodeService.GetChildren((int)RootNode.Id) is var children && children.Any() && !IsCollapsed)
     {
@@ -32,11 +32,6 @@
 
     [Parameter]
     public EventCallback<Node> OnEdit { get; set; }
-
-    void HandleEdit()
-    {
-        OnEdit.InvokeAsync(RootNode);
-    }
 
     bool _showEditDialog = false;
 
