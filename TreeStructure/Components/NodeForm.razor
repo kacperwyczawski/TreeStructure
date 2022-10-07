@@ -1,7 +1,8 @@
 <div class="my-4 p-4 container rounded shadow">
     <form>
         <div class="mb-3 form-floating">
-            <input type="text" class="form-control" id="nodeName" @bind="_nodeName" placeholder="example name">
+            <input type="text" class="form-control"
+                   id="nodeName" @bind="_nodeName" placeholder="example name" required>
             <label for="nodeName">Node name:</label>
         </div>
         <div class="mb-3 form-check">
@@ -11,7 +12,8 @@
         @if (!_addAsRoot)
         {
             <div class="mb-3  form-floating">
-                <input type="number" class="form-control" id="parentNodeId" @bind="_parentNodeId" placeholder="42"/>
+                <input type="number" class="form-control"
+                       id="parentNodeId" @bind="_parentNodeId" placeholder="42" required>
                 <label for="parentNodeId">Parent node id:</label>
             </div>
         }
