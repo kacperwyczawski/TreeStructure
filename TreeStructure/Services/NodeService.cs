@@ -60,6 +60,12 @@ public class NodeService
 
     public void ChangeParent(Node node, int? newParentId)
     {
+        if (node.Id == newParentId)
+        {
+            _logger.LogWarning("Cannot change parent to itself");
+            return;
+        }
+        
         _logger.LogInformation("Change parent of node {Node} form #{OldParentId} to #{NewParentId}",
             node, node.ParentId, newParentId);
         
