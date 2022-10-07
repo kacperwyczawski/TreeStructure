@@ -58,6 +58,18 @@ public class NodeService
         _context.SaveChanges();
     }
 
+    public void ChangeParent(Node node, int? newParentId)
+    {
+        _logger.LogInformation("Change parent of node {Node} form #{OldParentId} to #{NewParentId}",
+            node, node.ParentId, newParentId);
+        
+        var newNode = node with { ParentId = newParentId };
+        
+        _context.Nodes.Remove(node);
+        _context.Nodes.Add(newNode);
+        _context.SaveChanges();
+    }
+
     public void DeleteNodeWithChildren(Node? node)
     {
         if (node is null)

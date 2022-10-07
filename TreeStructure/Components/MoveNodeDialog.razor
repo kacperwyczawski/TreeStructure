@@ -1,0 +1,93 @@
+@using TreeStructure.Services
+@inject NodeService NodeService
+@inject ILogger<MoveNodeDialog> Logger
+
+<div class="modal" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Move node
+                    <span class="text-primary">@Node.Name</span>
+                    <span class="text-muted">#@Node.Id</span>
+                </h3>
+                <button type="button" class="btn-close" @onclick="@OnClose"></button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <label for="newParentId" class="form-label">Move to id:</label>
+                    <input type="number"
+                           class="form-control"
+                           id="newParentId"
+                           @bind="_newParentId"
+                           placeholder="@Node.ParentId">
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" @onclick="@OnClose">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" @onclick="@(() => OnMove(true))">
+                    Make root
+                </button>
+                <button type="button" class="btn btn-primary" @onclick="@(() => OnMove())">
+                    Move
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public Node Node { get; set; } = null!;
+
+    int? _newParentId;
+
+    void OnMove(bool makeRoot = false)
+    {
+        if (_newParentId is null && !makeRoot)
+        {
+            Logger.LogWarning("Trying to move node to null parent");
+            return;
+        }
+
+        if (Node.ParentId == _newParentId)
+        {
+            Logger.LogWarning("New parent id is the same as the current one");
+            OnClose.InvokeAsync();
+            return;
+        }
+
+        if (Node.ParentId is null && makeRoot)
+        {
+            Logger.LogWarning("Node {Node} is already root", Node);
+            OnClose.InvokeAsync();
+            return;
+        }
+
+        Logger.LogInformation("Change parent of node {Node} form #{OldParentId} to #{NewParentId}",
+            Node, Node.ParentId, _newParentId);
+        NodeService.ChangeParent(Node, _newParentId);
+
+        OnClose.InvokeAsync();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (Node is null)
+            throw new ArgumentNullException(nameof(Node));
+    }
+
+}

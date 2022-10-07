@@ -9,6 +9,7 @@
               OnExpand="@(() => IsCollapsed = false)"
               OnDelete="@(() => OnDelete.InvokeAsync(Node))"
               OnEdit="@(() => OnEdit.InvokeAsync(Node))"
+              OnMove="@(() => OnMove.InvokeAsync(Node))"
               IsCollapsed="@IsCollapsed"
               CanBeExpanded="@NodeService.HasChildren((int)Node.Id)"/>
     @if (GetSortedChildren() is var children && children.Any() && !IsCollapsed)
@@ -20,6 +21,7 @@
                       Node="@child"
                       OnEdit="@OnEdit"
                       OnDelete="@OnDelete"
+                      OnMove="@OnMove"
                       SortAscending="@SortAscending"
                       SortDescending="@SortDescending"/>
             }
@@ -37,6 +39,9 @@
 
     [Parameter]
     public EventCallback<Node> OnDelete { get; set; }
+    
+    [Parameter]
+    public EventCallback<Node> OnMove { get; set; }
 
     [Parameter]
     public bool SortAscending { get; set; }

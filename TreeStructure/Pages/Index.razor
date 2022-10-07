@@ -8,13 +8,19 @@
 {
     <RenameNodeDialog
         Node="@_nodeToEdit"
-        OnClose="@(OnRenameNodeDialogClose)"/>
+        OnClose="@OnRenameNodeDialogClose"/>
 }
 
 @if (_showDeleteNodeWithChildrenDialog && _nodeToDelete is not null)
 {
     <DeleteNodeWithChildrenDialog Node="@_nodeToDelete"
-                                  OnClose="@(OnDeleteNodeDialogClose)"/>
+                                  OnClose="@OnDeleteNodeDialogClose"/>
+}
+
+@if (_showMoveNodeDialog && _nodeToEdit is not null)
+{
+    <MoveNodeDialog Node="@_nodeToEdit"
+                    OnClose="@OnMoveNodeDialogClose"/>
 }
 
 <NodeForm OnAddNode="@(n => { NodeService.AddNode(n); Logger.LogInformation("Add node {Node}", n); })"/>
@@ -39,6 +45,7 @@
                 <Tree @ref="@_treeReference"
                       Node="@rootNode"
                       OnEdit="@OnNodeEdit"
+                      OnMove="@OnMoveNode"
                       OnDelete="@OnDelete"
                       SortAscending="@_sortAscending"
                       SortDescending="@_sortDescending"/>
@@ -70,6 +77,8 @@ else
 
     bool _showDeleteNodeWithChildrenDialog;
 
+    bool _showMoveNodeDialog;
+
     Node? _nodeToEdit;
 
     Node? _nodeToDelete;
@@ -80,6 +89,13 @@ else
     {
         _showNodeEditDialog = true;
         Logger.LogInformation($"Show node edit dialog");
+        _nodeToEdit = node;
+    }
+
+    void OnMoveNode(Node node)
+    {
+        _showMoveNodeDialog = true;
+        Logger.LogInformation("Show move node dialog");
         _nodeToEdit = node;
     }
 
@@ -131,6 +147,13 @@ else
         Logger.LogInformation("Hide delete node dialog");
     }
 
+    private void OnMoveNodeDialogClose()
+    {
+        _showMoveNodeDialog = false;
+        _nodeToEdit = null;
+        Logger.LogInformation("Hide move node dialog");
+    }
+
     private void OnRenameNodeDialogClose()
     {
         _showNodeEditDialog = false;
@@ -142,7 +165,7 @@ else
     {
         if (tree == null)
             return;
-        
+
         tree.IsCollapsed = false;
         StateHasChanged();
         OnExpandAll(tree.ChildReference);
@@ -152,7 +175,7 @@ else
     {
         if (tree == null)
             return;
-        
+
         tree.IsCollapsed = false;
         StateHasChanged();
         OnExpandAll(tree.ChildReference);
