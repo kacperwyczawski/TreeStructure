@@ -11,3 +11,4 @@
 2. `cd TreeStructure\TreeStructure`
 3. `dotnet ef database update`
 4. `dotnet run`
+5. open `http://localhost:5162` or `https://localhost:7247` in your browser
