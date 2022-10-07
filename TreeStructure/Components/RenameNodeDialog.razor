@@ -8,8 +8,8 @@
             <div class="modal-header">
                 <h3 class="modal-title">
                     Edit node
-                    <span class="text-primary">@Node!.Name</span>
-                    <span class="text-muted">#@Node!.Id</span>
+                    <span class="text-primary">@Node.Name</span>
+                    <span class="text-muted">#@Node.Id</span>
                 </h3>
                 <button type="button" class="btn-close" @onclick="@OnClose"></button>
             </div>
@@ -42,7 +42,7 @@
 
     [Parameter]
     [EditorRequired]
-    public Node? Node { get; set; }
+    public Node Node { get; set; } = null!;
 
     string? _newNodeName;
 

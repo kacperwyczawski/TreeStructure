@@ -26,31 +26,37 @@
 </div>
 
 @code {
-    
+
     [Parameter]
     public EventCallback<Node> OnAddNode { get; set; }
-    
+
     int? _parentNodeId;
 
     string? _nodeName;
 
     bool _addAsRoot;
-    
+
     void HandleAddNode()
     {
         if (string.IsNullOrEmpty(_nodeName) || string.IsNullOrWhiteSpace(_nodeName))
             return;
-        
+
         if (_addAsRoot)
         {
-            OnAddNode.InvokeAsync(new Node(_nodeName, null, null));
+            OnAddNode.InvokeAsync(new Node
+            {
+                Name = _nodeName, ParentId = _parentNodeId
+            });
         }
         else
         {
             if (_parentNodeId is null)
                 return;
-            
-            OnAddNode.InvokeAsync(new Node(_nodeName, null, _parentNodeId));
+
+            OnAddNode.InvokeAsync(new Node
+            {
+                Name = _nodeName, ParentId = _parentNodeId
+            });
         }
     }
 

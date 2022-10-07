@@ -101,7 +101,7 @@ else
 
     void OnDelete(Node node)
     {
-        if (NodeService.HasChildren((int)node.Id))
+        if (NodeService.HasChildren(node.Id))
         {
             _showDeleteNodeWithChildrenDialog = true;
             Logger.LogInformation("Show delete node with children dialog");

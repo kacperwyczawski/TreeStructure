@@ -1,3 +1,12 @@
 ﻿namespace TreeStructure.Models;
 
-public record Node(string Name, int? Id, int? ParentId);
+public class Node
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+    
+    public int? ParentId { get; set; }
+
+    public override string ToString() => $"{Name} #{Id} with parent #{ParentId}";
+}

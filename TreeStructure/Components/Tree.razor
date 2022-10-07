@@ -2,16 +2,15 @@
 @inject NodeService NodeService
 
 <li style="list-style-type: none">
-    <!-- TODO: Fix this warnings -->
     <TreeItem Text="@Node.Name"
-              Id="@((int)Node.Id)"
+              Id="@Node.Id"
               OnCollapse="@(() => IsCollapsed = true)"
               OnExpand="@(() => IsCollapsed = false)"
               OnDelete="@(() => OnDelete.InvokeAsync(Node))"
               OnEdit="@(() => OnEdit.InvokeAsync(Node))"
               OnMove="@(() => OnMove.InvokeAsync(Node))"
               IsCollapsed="@IsCollapsed"
-              CanBeExpanded="@NodeService.HasChildren((int)Node.Id)"/>
+              CanBeExpanded="@NodeService.HasChildren(Node.Id)"/>
     @if (GetSortedChildren() is var children && children.Any() && !IsCollapsed)
     {
         <ol>
@@ -32,7 +31,8 @@
 @code {
 
     [Parameter]
-    public Node Node { get; set; }
+    [EditorRequired]
+    public Node Node { get; set; } = null!;
 
     [Parameter]
     public EventCallback<Node> OnEdit { get; set; }
@@ -57,12 +57,19 @@
 
     List<Node> GetSortedChildren()
     {
-        var children = NodeService.GetChildren((int)Node.Id);
+        var children = NodeService.GetChildren(Node.Id);
 
         return (SortAscending, SortDescending) switch {
             (true, false) => children.OrderBy(x => x.Name).ToList(),
             (false, true) => children.OrderByDescending(x => x.Name).ToList(),
             (false, false) or (true, true) => children };
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (Node is null)
+            throw new ArgumentNullException(nameof(Node));
     }
 
 }
