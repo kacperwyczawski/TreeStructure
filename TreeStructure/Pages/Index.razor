@@ -24,8 +24,8 @@
     IsSortDescending="@_sortDescending"
     OnSortAscending="@OnSortAscending"
     OnSortDescending="@OnSortDescending"
-    OnDeleteAll="@(() => { NodeService.DeleteAllNodes(); Logger.LogInformation("Delete all nodes"); })"/>
-OnSampleData="@OnSampleData"/>
+    OnDeleteAll="@(() => { NodeService.DeleteAllNodes(); Logger.LogInformation("Delete all nodes"); })"
+    OnSampleData="@OnSampleData"/>
 
 <!-- tree structure -->
 @if (RootNodes.Any())
