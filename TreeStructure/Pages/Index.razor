@@ -2,29 +2,30 @@
 @using TreeStructure.Services
 
 @inject NodeService NodeService
+@inject ILogger<Index> Logger
 
 @if (_showNodeEditDialog)
 {
-    <RenameNodeDialog 
-        Node="@_nodeToEdit" 
-        OnClose="@(() => { _showNodeEditDialog = false; _nodeToEdit = null; })"/>
+    <RenameNodeDialog
+        Node="@_nodeToEdit"
+        OnClose="@(OnRenameNodeDialogClose)"/>
 }
 
 @if (_showDeleteNodeWithChildrenDialog && _nodeToDelete is not null)
 {
-    <DeleteNodeWithChildrenDialog Node="@_nodeToDelete" 
-        OnClose="@(() => { _showDeleteNodeWithChildrenDialog = false; _nodeToDelete = null; })"/>
+    <DeleteNodeWithChildrenDialog Node="@_nodeToDelete"
+                                  OnClose="@(OnDeleteNodeDialogClose)"/>
 }
 
-<NodeForm OnAddNode="@(n => NodeService.AddNode(n))"/>
+<NodeForm OnAddNode="@(n => { NodeService.AddNode(n); Logger.LogInformation("Add node {Node}", n); })"/>
 
 <Buttons
     IsSortAscending="@_sortAscending"
     IsSortDescending="@_sortDescending"
-    OnSortAscending="@(() => { _sortAscending = !_sortAscending; _sortDescending = false; })"
-    OnSortDescending="@(() => { _sortDescending = !_sortDescending; _sortAscending = false; })"
-    OnDeleteAll="@(() => NodeService.DeleteAllNodes())"
-    OnSampleData="@(() => { NodeService.DeleteAllNodes(); NodeService.Seed(); })"/>
+    OnSortAscending="@OnSortAscending"
+    OnSortDescending="@OnSortDescending"
+    OnDeleteAll="@(() => { NodeService.DeleteAllNodes(); Logger.LogInformation("Delete all nodes"); })"/>
+OnSampleData="@OnSampleData"/>
 
 <!-- tree structure -->
 @if (RootNodes.Any())
@@ -58,13 +59,13 @@ else
 @code {
 
     bool _sortAscending;
-    
+
     bool _sortDescending;
 
     List<Node> RootNodes => NodeService.GetRootNodes();
 
     bool _showNodeEditDialog;
-    
+
     bool _showDeleteNodeWithChildrenDialog;
 
     Node? _nodeToEdit;
@@ -74,21 +75,61 @@ else
     void OnNodeEdit(Node node)
     {
         _showNodeEditDialog = true;
+        Logger.LogInformation($"Show node edit dialog");
         _nodeToEdit = node;
     }
-    
+
     void OnDelete(Node node)
     {
         if (NodeService.HasChildren((int)node.Id))
         {
             _showDeleteNodeWithChildrenDialog = true;
+            Logger.LogInformation("Show delete node with children dialog");
             _nodeToDelete = node;
         }
         else
         {
             NodeService.DeleteNodeWithChildren(node);
+            Logger.LogInformation("Delete node: {Node}", node);
             StateHasChanged();
         }
+    }
+
+    private void OnSortDescending()
+    {
+        _sortDescending = !_sortDescending;
+        _sortAscending = false;
+        Logger.LogInformation("Descending sort: {SortDescending}", _sortDescending);
+    }
+
+    private void OnSortAscending()
+    {
+        _sortAscending = !_sortAscending;
+        _sortDescending = false;
+        Logger.LogInformation("Ascending sort: {SortAscending}", _sortAscending);
+    }
+
+    private void OnSampleData()
+    {
+        NodeService.DeleteAllNodes();
+        Logger.LogInformation("Delete all nodes");
+
+        NodeService.Seed();
+        Logger.LogInformation("Seed sample data");
+    }
+
+    private void OnDeleteNodeDialogClose()
+    {
+        _showDeleteNodeWithChildrenDialog = false;
+        _nodeToDelete = null;
+        Logger.LogInformation("Hide delete node dialog");
+    }
+
+    private void OnRenameNodeDialogClose()
+    {
+        _showNodeEditDialog = false;
+        _nodeToEdit = null;
+        Logger.LogInformation("Hide node edit dialog");
     }
 
 }
