@@ -66,6 +66,12 @@ public class NodeService
             return;
         }
         
+        if (node.ParentId == newParentId)
+        {
+            _logger.LogInformation("New parent id is the same as the current one");
+            return;
+        }
+        
         _logger.LogInformation("Change parent of node {Node} form #{OldParentId} to #{NewParentId}",
             node, node.ParentId, newParentId);
         

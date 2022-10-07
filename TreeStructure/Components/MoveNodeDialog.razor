@@ -61,13 +61,6 @@
             return;
         }
 
-        if (Node.ParentId == _newParentId)
-        {
-            Logger.LogWarning("New parent id is the same as the current one");
-            OnClose.InvokeAsync();
-            return;
-        }
-
         if (Node.ParentId is null && makeRoot)
         {
             Logger.LogWarning("Node {Node} is already root", Node);
