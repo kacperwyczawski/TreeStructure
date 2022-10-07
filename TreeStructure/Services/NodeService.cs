@@ -38,6 +38,14 @@ public class NodeService
             .AsNoTracking()
             .Any(x => x.ParentId == id);
     }
+    
+    public bool Exists(int id)
+    {
+        _logger.LogInformation("Check if node #{Id} exists", id);
+        return _context.Nodes
+            .AsNoTracking()
+            .Any(x => x.Id == id);
+    }
 
     public Node GetNode(int id)
     {

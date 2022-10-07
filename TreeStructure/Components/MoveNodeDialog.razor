@@ -68,6 +68,12 @@
             OnClose.InvokeAsync();
             return;
         }
+        
+        if (_newParentId is { } notNullId && NodeService.Exists(notNullId) == false)
+        {
+            Logger.LogWarning("Trying to move node to non-existing parent {ParentId}", notNullId);
+            return;
+        }
 
         Logger.LogInformation("Change parent of node {Node} form #{OldParentId} to #{NewParentId}",
             Node, Node.ParentId, _newParentId);
