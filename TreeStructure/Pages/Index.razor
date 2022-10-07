@@ -99,6 +99,7 @@ else
     {
         _sortDescending = !_sortDescending;
         _sortAscending = false;
+        Logger.LogInformation("Ascending sort: false");
         Logger.LogInformation("Descending sort: {SortDescending}", _sortDescending);
     }
 
@@ -107,6 +108,7 @@ else
         _sortAscending = !_sortAscending;
         _sortDescending = false;
         Logger.LogInformation("Ascending sort: {SortAscending}", _sortAscending);
+        Logger.LogInformation("Descending sort: false");
     }
 
     private void OnSampleData()
