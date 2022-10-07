@@ -1,4 +1,4 @@
-# Tree Structure
+# 🌳 Tree Structure
 
 ### required to run:
 
@@ -7,7 +7,7 @@
 
 ### how to run:
 
-1. `git clone <repository link> TreeStructure`
+1. `git clone https://gitlab.ideo.pl/k.wyczawski/tree-structure.git TreeStructure`
 2. `cd TreeStructure\TreeStructure`
 3. `dotnet ef database update`
 4. `dotnet run`
