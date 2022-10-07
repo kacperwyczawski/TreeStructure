@@ -62,6 +62,7 @@ public class NodeService
         node.Name = name;
         _context.Nodes.Update(node);
         _context.SaveChanges();
+        _context.Entry(node).State = EntityState.Detached;
     }
 
     public void ChangeParent(Node node, int? newParentId)
@@ -84,6 +85,7 @@ public class NodeService
         node.ParentId = newParentId;
         _context.Nodes.Update(node);
         _context.SaveChanges();
+        _context.Entry(node).State = EntityState.Detached;
     }
 
     public void DeleteNodeWithChildren(Node? node)
