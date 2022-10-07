@@ -51,7 +51,7 @@
         if (_newNodeName is null)
             return;
         
-        NodeService.RenameNode((int)Node!.Id, _newNodeName);
+        NodeService.RenameNode(Node, _newNodeName);
         
         OnClose.InvokeAsync();
     }
