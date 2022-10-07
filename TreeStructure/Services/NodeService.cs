@@ -47,7 +47,7 @@ public class NodeService
             .Any(x => x.Id == id);
     }
 
-    public Node GetNode(int id)
+    public Node? GetNode(int id)
     {
         _logger.LogInformation("Get node #{Id}", id);
         return _context.Nodes
@@ -55,13 +55,13 @@ public class NodeService
             .FirstOrDefault(x => x.Id == id);
     }
 
-    public void RenameNode(int id, string name)
+    public void RenameNode(Node node, string name)
     {
-        _logger.LogInformation("Rename node #{Id} to {Name}", id, name);
-        var oldNode = GetNode(id);
-        var newNode = oldNode with { Name = name };
+        _logger.LogInformation("Rename node {Node} to {Name}", node, name);
+        
+        var newNode = node with { Name = name };
 
-        _context.Nodes.Remove(oldNode);
+        _context.Nodes.Remove(node);
         _context.Nodes.Add(newNode);
         _context.SaveChanges();
     }
