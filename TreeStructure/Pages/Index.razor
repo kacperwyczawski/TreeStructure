@@ -36,9 +36,9 @@
     OnCollapseAll="@(() => OnCollapseAll(_treeReference))"/>
 
 <!-- tree structure -->
-@if (RootNodes.Any())
+@if (NodeService.GetRootNodes().Any())
 {
-    @foreach (var rootNode in RootNodes)
+    @foreach (var rootNode in GetSortedRootNodes())
     {
         <div class="my-4 p-4 ps-0 container rounded shadow">
             <ol>
@@ -71,7 +71,15 @@ else
 
     bool _sortDescending;
 
-    List<Node> RootNodes => NodeService.GetRootNodes();
+    List<Node> GetSortedRootNodes()
+    {
+        var rootNodes = NodeService.GetRootNodes();
+
+        return (_sortAscending, _sortDescending) switch {
+            (true, false) => rootNodes.OrderBy(x => x.Name).ToList(),
+            (false, true) => rootNodes.OrderByDescending(x => x.Name).ToList(),
+            (false, false) or (true, true) => rootNodes };
+    }
 
     bool _showNodeEditDialog;
 
