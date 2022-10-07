@@ -5,23 +5,23 @@
     <!-- TODO: Fix this warnings -->
     <TreeItem Text="@Node.Name"
               Id="@((int)Node.Id)"
-              OnCollapse="@(() => _isCollapsed = true)"
-              OnExpand="@(() => _isCollapsed = false)"
+              OnCollapse="@(() => IsCollapsed = true)"
+              OnExpand="@(() => IsCollapsed = false)"
               OnDelete="@(() => OnDelete.InvokeAsync(Node))"
               OnEdit="@(() => OnEdit.InvokeAsync(Node))"
-              IsCollapsed="@_isCollapsed"
+              IsCollapsed="@IsCollapsed"
               CanBeExpanded="@NodeService.HasChildren((int)Node.Id)"/>
-    @if (GetSortedChildren() is var children && children.Any() && !_isCollapsed)
+    @if (GetSortedChildren() is var children && children.Any() && !IsCollapsed)
     {
         <ol>
             @foreach (var child in children)
             {
-                <Tree
-                    Node="@child"
-                    OnEdit="@OnEdit"
-                    OnDelete="@OnDelete"
-                    SortAscending="@SortAscending"
-                    SortDescending="@SortDescending"/>
+                <Tree @ref="@ChildReference"
+                      Node="@child"
+                      OnEdit="@OnEdit"
+                      OnDelete="@OnDelete"
+                      SortAscending="@SortAscending"
+                      SortDescending="@SortDescending"/>
             }
         </ol>
     }
@@ -44,9 +44,11 @@
     [Parameter]
     public bool SortDescending { get; set; }
 
+    public bool IsCollapsed = true;
+
+    public Tree? ChildReference;
+
     bool _showEditDialog = false;
-    
-    bool _isCollapsed = true;
 
     List<Node> GetSortedChildren()
     {

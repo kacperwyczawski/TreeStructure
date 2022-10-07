@@ -25,7 +25,9 @@
     OnSortAscending="@OnSortAscending"
     OnSortDescending="@OnSortDescending"
     OnDeleteAll="@(() => { NodeService.DeleteAllNodes(); Logger.LogInformation("Delete all nodes"); })"
-    OnSampleData="@OnSampleData"/>
+    OnSampleData="@OnSampleData"
+    OnExpandAll="@(() => OnExpandAll(_treeReference))"
+    OnCollapseAll="@(() => OnCollapseAll(_treeReference))"/>
 
 <!-- tree structure -->
 @if (RootNodes.Any())
@@ -34,12 +36,12 @@
     {
         <div class="my-4 p-4 ps-0 container rounded shadow">
             <ol>
-                <Tree
-                    Node="@rootNode"
-                    OnEdit="@OnNodeEdit"
-                    OnDelete="@OnDelete"
-                    SortAscending="@_sortAscending"
-                    SortDescending="@_sortDescending"/>
+                <Tree @ref="@_treeReference"
+                      Node="@rootNode"
+                      OnEdit="@OnNodeEdit"
+                      OnDelete="@OnDelete"
+                      SortAscending="@_sortAscending"
+                      SortDescending="@_sortDescending"/>
             </ol>
         </div>
     }
@@ -71,6 +73,8 @@ else
     Node? _nodeToEdit;
 
     Node? _nodeToDelete;
+
+    Tree _treeReference;
 
     void OnNodeEdit(Node node)
     {
@@ -132,6 +136,26 @@ else
         _showNodeEditDialog = false;
         _nodeToEdit = null;
         Logger.LogInformation("Hide node edit dialog");
+    }
+
+    private void OnCollapseAll(Tree? tree)
+    {
+        if (tree == null)
+            return;
+        
+        tree.IsCollapsed = false;
+        StateHasChanged();
+        OnExpandAll(tree.ChildReference);
+    }
+
+    private void OnExpandAll(Tree? tree)
+    {
+        if (tree == null)
+            return;
+        
+        tree.IsCollapsed = false;
+        StateHasChanged();
+        OnExpandAll(tree.ChildReference);
     }
 
 }
