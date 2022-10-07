@@ -38,7 +38,7 @@ public class NodeService
             .AsNoTracking()
             .Any(x => x.ParentId == id);
     }
-    
+
     public bool Exists(int id)
     {
         _logger.LogInformation("Check if node #{Id} exists", id);
@@ -59,10 +59,8 @@ public class NodeService
     {
         _logger.LogInformation("Rename node {Node} to {Name}", node, name);
         
-        var newNode = node with { Name = name };
-
-        _context.Nodes.Remove(node);
-        _context.Nodes.Add(newNode);
+        node.Name = name;
+        _context.Nodes.Update(node);
         _context.SaveChanges();
     }
 
@@ -73,20 +71,18 @@ public class NodeService
             _logger.LogWarning("Cannot change parent to itself");
             return;
         }
-        
+
         if (node.ParentId == newParentId)
         {
             _logger.LogInformation("New parent id is the same as the current one");
             return;
         }
-        
+
         _logger.LogInformation("Change parent of node {Node} form #{OldParentId} to #{NewParentId}",
             node, node.ParentId, newParentId);
-        
-        var newNode = node with { ParentId = newParentId };
-        
-        _context.Nodes.Remove(node);
-        _context.Nodes.Add(newNode);
+
+        node.ParentId = newParentId;
+        _context.Nodes.Update(node);
         _context.SaveChanges();
     }
 
@@ -99,7 +95,7 @@ public class NodeService
 
         _context.Nodes.Remove(node);
 
-        if (GetChildren((int)node.Id) is var children && children.Any())
+        if (GetChildren(node.Id) is var children && children.Any())
         {
             foreach (var child in children)
             {
@@ -120,23 +116,43 @@ public class NodeService
     public void Seed()
     {
         _logger.LogInformation("Seed database");
-        _context.Nodes.AddRange(new List<Node>
-        {
-            new("Pineapple", 0, null),
-            new("Apple", 1, 0),
-            new("Banana", 2, 0),
-            new("Orange", 3, 0),
-            new("Cherry", 12, 0),
-            new("Peach", 4, 2),
-            new("Pear", 5, 2),
-            new("Strawberry", 6, 5),
-
-            new("Lime", 7, null),
-            new("Lemon", 8, 7),
-            new("Grapefruit", 9, 8),
-            new("Mango", 10, 8),
-            new("Papaya", 11, 7),
-        });
+        
+        // layer 0 (roots)
+        var pineapple = new Node { Name = "Pineapple", ParentId = null };
+        _context.Nodes.Add(pineapple);
+        var lime = new Node { Name = "Lime", ParentId = null };
+        _context.Nodes.Add(lime);
+        _context.SaveChanges();
+        
+        // layer 1
+        var apple = new Node { Name = "Apple", ParentId = pineapple.Id };
+        _context.Nodes.Add(apple);
+        var banana = new Node { Name = "Banana", ParentId = pineapple.Id };
+        _context.Nodes.Add(banana);
+        var orange = new Node { Name = "Orange", ParentId = pineapple.Id };
+        _context.Nodes.Add(orange);
+        var cherry = new Node { Name = "Cherry", ParentId = pineapple.Id };
+        _context.Nodes.Add(cherry);
+        
+        var lemon = new Node { Name = "Lemon", ParentId = lime.Id };
+        _context.Nodes.Add(lemon);
+        _context.SaveChanges();
+        
+        // layer 2
+        var peach = new Node { Name = "Peach", ParentId = banana.Id };
+        _context.Nodes.Add(peach);
+        var pear = new Node { Name = "Pear", ParentId = banana.Id };
+        _context.Nodes.Add(pear);
+        
+        var grapefruit = new Node { Name = "Grapefruit", ParentId = lemon.Id };
+        _context.Nodes.Add(grapefruit);
+        var mango = new Node { Name = "Mango", ParentId = lemon.Id };
+        _context.Nodes.Add(mango);
+        _context.SaveChanges();
+        
+        // layer 3
+        var strawberry = new Node { Name = "Strawberry", ParentId = pear.Id };
+        _context.Nodes.Add(strawberry);
         _context.SaveChanges();
     }
 
