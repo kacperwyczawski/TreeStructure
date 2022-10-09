@@ -32,11 +32,12 @@
     public EventCallback OnClose { get; set; }
     
     [Parameter]
-    public Node? Node { get; set; }
+    [EditorRequired]
+    public int NodeId { get; set; }
 
     void OnDelete()
     {
-        NodeService.DeleteNodeWithChildren(Node);
+        NodeService.DeleteNodeRecursively(NodeId);
         OnClose.InvokeAsync();
     }
 

@@ -2,22 +2,29 @@
 @inject NodeService NodeService
 
 <li style="list-style-type: none">
-    <TreeItem Text="@Node.Name"
-              Id="@Node.Id"
-              OnCollapse="@(() => IsCollapsed = true)"
-              OnExpand="@(() => IsCollapsed = false)"
-              OnDelete="@(() => OnDelete.InvokeAsync(Node))"
-              OnEdit="@(() => OnEdit.InvokeAsync(Node))"
-              OnMove="@(() => OnMove.InvokeAsync(Node))"
-              IsCollapsed="@IsCollapsed"
-              CanBeExpanded="@NodeService.HasChildren(Node.Id)"/>
+    @*
+        idk why I have to check if node exists here,
+        but without it I get an exception after deleting node without children
+    *@
+    @if (NodeService.Exists(NodeId))
+    {
+        <TreeItem Text="@NodeService.GetName(NodeId)"
+                  Id="@NodeId"
+                  OnCollapse="@(() => IsCollapsed = true)"
+                  OnExpand="@(() => IsCollapsed = false)"
+                  OnDelete="@(() => OnDelete.InvokeAsync(NodeId))"
+                  OnEdit="@(() => OnEdit.InvokeAsync(NodeId))"
+                  OnMove="@(() => OnMove.InvokeAsync(NodeId))"
+                  IsCollapsed="@IsCollapsed"
+                  CanBeExpanded="@NodeService.HasChildren(NodeId)"/>
+    }
     @if (GetSortedChildren() is var children && children.Any() && !IsCollapsed)
     {
         <ol>
             @foreach (var child in children)
             {
                 <Tree @ref="@ChildReference"
-                      Node="@child"
+                      NodeId="@child.Id"
                       OnEdit="@OnEdit"
                       OnDelete="@OnDelete"
                       OnMove="@OnMove"
@@ -32,16 +39,16 @@
 
     [Parameter]
     [EditorRequired]
-    public Node Node { get; set; } = null!;
+    public int NodeId { get; set; }
 
     [Parameter]
-    public EventCallback<Node> OnEdit { get; set; }
+    public EventCallback<int> OnEdit { get; set; }
 
     [Parameter]
-    public EventCallback<Node> OnDelete { get; set; }
-    
+    public EventCallback<int> OnDelete { get; set; }
+
     [Parameter]
-    public EventCallback<Node> OnMove { get; set; }
+    public EventCallback<int> OnMove { get; set; }
 
     [Parameter]
     public bool SortAscending { get; set; }
@@ -57,19 +64,12 @@
 
     List<Node> GetSortedChildren()
     {
-        var children = NodeService.GetChildren(Node.Id);
+        var children = NodeService.GetChildren(NodeId);
 
         return (SortAscending, SortDescending) switch {
             (true, false) => children.OrderBy(x => x.Name).ToList(),
             (false, true) => children.OrderByDescending(x => x.Name).ToList(),
             (false, false) or (true, true) => children };
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        if (Node is null)
-            throw new ArgumentNullException(nameof(Node));
     }
 
 }

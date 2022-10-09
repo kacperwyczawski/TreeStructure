@@ -4,34 +4,34 @@
 @inject NodeService NodeService
 @inject ILogger<Index> Logger
 
-@if (_showNodeEditDialog)
+@if (_showNodeEditDialog && _currentNodeId is not null)
 {
     <RenameNodeDialog
-        Node="@_nodeToEdit"
+        NodeId ="@((int)_currentNodeId)"
         OnClose="@OnRenameNodeDialogClose"/>
 }
 
-@if (_showDeleteNodeWithChildrenDialog && _nodeToDelete is not null)
+@if (_showDeleteNodeWithChildrenDialog && _currentNodeId is not null)
 {
-    <DeleteNodeWithChildrenDialog Node="@_nodeToDelete"
+    <DeleteNodeWithChildrenDialog NodeId="@((int)_currentNodeId)"
                                   OnClose="@OnDeleteNodeDialogClose"/>
 }
 
-@if (_showMoveNodeDialog && _nodeToEdit is not null)
+@if (_showMoveNodeDialog && _currentNodeId is not null)
 {
-    <MoveNodeDialog Node="@_nodeToEdit"
+    <MoveNodeDialog NodeId="@((int)_currentNodeId)"
                     OnClose="@OnMoveNodeDialogClose"/>
 }
 
-<NodeForm OnAddNode="@(n => { NodeService.AddNode(n); Logger.LogInformation("Add node {Node}", n); })"/>
+<NodeForm OnAddNode="@(n => NodeService.AddNode(n))"/>
 
 <Buttons
     IsSortAscending="@_sortAscending"
     IsSortDescending="@_sortDescending"
     OnSortAscending="@OnSortAscending"
     OnSortDescending="@OnSortDescending"
-    OnDeleteAll="@(() => { NodeService.DeleteAllNodes(); Logger.LogInformation("Delete all nodes"); })"
-    OnSampleData="@OnSampleData"
+    OnDeleteAll="@(() => NodeService.DeleteAllNodes())"
+    OnSampleData="@(() => { NodeService.DeleteAllNodes(); NodeService.Seed(); })"
     OnExpandAll="@(() => OnExpandAll(_treeReference))"
     OnCollapseAll="@(() => OnCollapseAll(_treeReference))"/>
 
@@ -43,7 +43,7 @@
         <div class="my-4 p-4 ps-0 container rounded shadow">
             <ol>
                 <Tree @ref="@_treeReference"
-                      Node="@rootNode"
+                      NodeId="@rootNode.Id"
                       OnEdit="@OnNodeEdit"
                       OnMove="@OnMoveNode"
                       OnDelete="@OnDelete"
@@ -87,38 +87,35 @@ else
 
     bool _showMoveNodeDialog;
 
-    Node? _nodeToEdit;
-
-    Node? _nodeToDelete;
+    int? _currentNodeId;
 
     Tree _treeReference;
 
-    void OnNodeEdit(Node node)
+    void OnNodeEdit(int id)
     {
         _showNodeEditDialog = true;
-        Logger.LogInformation($"Show node edit dialog");
-        _nodeToEdit = node;
+        Logger.LogInformation("Show node edit dialog");
+        _currentNodeId = id;
     }
 
-    void OnMoveNode(Node node)
+    void OnMoveNode(int id)
     {
         _showMoveNodeDialog = true;
         Logger.LogInformation("Show move node dialog");
-        _nodeToEdit = node;
+        _currentNodeId = id;
     }
 
-    void OnDelete(Node node)
+    void OnDelete(int id)
     {
-        if (NodeService.HasChildren(node.Id))
+        if (NodeService.HasChildren(id))
         {
             _showDeleteNodeWithChildrenDialog = true;
             Logger.LogInformation("Show delete node with children dialog");
-            _nodeToDelete = node;
+            _currentNodeId = id;
         }
         else
         {
-            NodeService.DeleteNodeWithChildren(node);
-            Logger.LogInformation("Delete node: {Node}", node);
+            NodeService.DeleteNodeRecursively(id);
             StateHasChanged();
         }
     }
@@ -139,38 +136,30 @@ else
         Logger.LogInformation("Descending sort: false");
     }
 
-    private void OnSampleData()
-    {
-        NodeService.DeleteAllNodes();
-        Logger.LogInformation("Delete all nodes");
-
-        NodeService.Seed();
-        Logger.LogInformation("Seed sample data");
-    }
-
     private void OnDeleteNodeDialogClose()
     {
         _showDeleteNodeWithChildrenDialog = false;
-        _nodeToDelete = null;
+        _currentNodeId = null;
         Logger.LogInformation("Hide delete node dialog");
     }
 
     private void OnMoveNodeDialogClose()
     {
         _showMoveNodeDialog = false;
-        _nodeToEdit = null;
+        _currentNodeId = null;
         Logger.LogInformation("Hide move node dialog");
     }
 
     private void OnRenameNodeDialogClose()
     {
         _showNodeEditDialog = false;
-        _nodeToEdit = null;
+        _currentNodeId = null;
         Logger.LogInformation("Hide node edit dialog");
     }
 
     private void OnCollapseAll(Tree? tree)
     {
+        // not working
         if (tree == null)
             return;
 
@@ -181,6 +170,7 @@ else
 
     private void OnExpandAll(Tree? tree)
     {
+        // not working
         if (tree == null)
             return;
 
