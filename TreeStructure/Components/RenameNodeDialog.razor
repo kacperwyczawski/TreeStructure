@@ -8,8 +8,8 @@
             <div class="modal-header">
                 <h3 class="modal-title">
                     Edit node
-                    <span class="text-primary">@Node.Name</span>
-                    <span class="text-muted">#@Node.Id</span>
+                    <span class="text-primary">@NodeService.GetName(NodeId)</span>
+                    <span class="text-muted">#@NodeId</span>
                 </h3>
                 <button type="button" class="btn-close" @onclick="@OnClose"></button>
             </div>
@@ -21,7 +21,7 @@
                            class="form-control"
                            id="newNodeName"
                            @bind="_newNodeName"
-                           placeholder="@Node.Name"
+                           placeholder="@NodeService.GetName(NodeId)"
                            required>
                 </form>
             </div>
@@ -42,7 +42,7 @@
 
     [Parameter]
     [EditorRequired]
-    public Node Node { get; set; } = null!;
+    public int NodeId { get; set; }
 
     string? _newNodeName;
 
@@ -51,17 +51,9 @@
         if (_newNodeName is null)
             return;
         
-        NodeService.RenameNode(Node, _newNodeName);
+        NodeService.RenameNode(NodeId, _newNodeName);
         
         OnClose.InvokeAsync();
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        if (Node is null)
-            throw new ArgumentNullException(nameof(Node));
     }
 
 }

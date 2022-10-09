@@ -47,31 +47,58 @@ public class NodeService
             .Any(x => x.Id == id);
     }
 
-    public Node? GetNode(int id)
+    public Node GetNode(int id)
     {
         _logger.LogInformation("Get node #{Id}", id);
-        return _context.Nodes
-            .AsNoTracking()
-            .FirstOrDefault(x => x.Id == id);
-    }
-
-    public void RenameNode(Node node, string name)
-    {
-        _logger.LogInformation("Rename node {Node} to {Name}", node, name);
         
-        node.Name = name;
-        _context.Nodes.Update(node);
-        _context.SaveChanges();
-        _context.Entry(node).State = EntityState.Detached;
-    }
+        var node = _context.Nodes
+            .AsNoTracking()
+            .SingleOrDefault(x => x.Id == id);
 
-    public void ChangeParent(Node node, int? newParentId)
+        if (node is not null)
+            return node;
+        
+        _logger.LogWarning("Node #{Id} not found", id);
+        throw new Exception($"Node #{id} not found");
+
+    }
+    
+    private Node GetNodeWithTracking(int id)
     {
-        if (node.Id == newParentId)
+        _logger.LogInformation("Get node #{Id} with tracking", id);
+        
+        var node = _context.Nodes
+            .SingleOrDefault(x => x.Id == id);
+
+        if (node is not null)
+            return node;
+        
+        _logger.LogWarning("Node #{Id} not found", id);
+        throw new Exception($"Node #{id} not found");
+
+    }
+    
+    public void RenameNode(int id, string name)
+    {
+        _logger.LogInformation("Rename node #{Id} to {NewName}", id, name);
+        
+        var node = GetNodeWithTracking(id);
+
+        node.Name = name;
+        _context.SaveChanges();
+    }
+    
+    public void ChangeParent(int id, int? newParentId)
+    {
+        _logger.LogInformation("Change parent of node #{Id} to #{NewParentId}", id, newParentId);
+        
+        if (id == newParentId)
         {
             _logger.LogWarning("Cannot change parent to itself");
             return;
         }
+
+        var node = GetNodeWithTracking(id);
 
         if (node.ParentId == newParentId)
         {
@@ -79,32 +106,26 @@ public class NodeService
             return;
         }
 
-        _logger.LogInformation("Change parent of node {Node} form #{OldParentId} to #{NewParentId}",
-            node, node.ParentId, newParentId);
-
         node.ParentId = newParentId;
-        _context.Nodes.Update(node);
         _context.SaveChanges();
-        _context.Entry(node).State = EntityState.Detached;
     }
 
-    public void DeleteNodeWithChildren(Node? node)
+    public void DeleteNodeRecursively(int id)
     {
-        if (node is null)
-            return;
+        _logger.LogInformation("Delete node #{Id} with children", id);
 
-        _logger.LogInformation("Delete node {Node}", node);
+        var node = GetNodeWithTracking(id);
 
         _context.Nodes.Remove(node);
-
+        
         if (GetChildren(node.Id) is var children && children.Any())
         {
             foreach (var child in children)
             {
-                DeleteNodeWithChildren(child);
+                DeleteNodeRecursively(child.Id);
             }
         }
-
+        
         _context.SaveChanges();
     }
 
@@ -172,5 +193,13 @@ public class NodeService
         return _context.Nodes
             .AsNoTracking()
             .Where(x => x.ParentId == null).ToList();
+    }
+    
+    public string GetName(int id)
+    {
+        _logger.LogInformation("Get name of node #{Id}", id);
+        return _context.Nodes
+            .AsNoTracking()
+            .Single(n => n.Id == id).Name;
     }
 }
