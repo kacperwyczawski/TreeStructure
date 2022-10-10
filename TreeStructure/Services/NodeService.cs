@@ -18,21 +18,28 @@ public class NodeService
 
     public void AddNode(Node node)
     {
-        // assign the node display index
-        node.DisplayIndex = GetNextDisplayIndex(node.ParentId);
-        
-        _logger.LogInformation("Add node {Node} with assigned display index {DisplayIndex}",
-            node, node.DisplayIndex);
+        _logger.LogInformation("Add node {Node}", node);
         _context.Nodes.Add(node);
+        
+        _context.SaveChanges();
+        
+        // assign the node display index
+        var displayIndex = GetSiblingNodes(node.Id).Count - 1;
+        _logger.LogInformation("Assign display index {DisplayIndex} to node #{NodeId}",
+            displayIndex, node.Id);
+        node.DisplayIndex = displayIndex;
+        
+        // save again
         _context.SaveChanges();
     }
-    
-    private int GetNextDisplayIndex(int? parentId)
+
+    public List<Node> GetSiblingNodes(int id)
     {
-        var maxDisplayIndex = _context.Nodes
-            .Where(n => n.ParentId == parentId)
-            .Max(n => n.DisplayIndex);
-        return maxDisplayIndex + 1;
+        var node = GetNode(id);
+
+        return node.ParentId is null
+            ? GetRootNodes()
+            : _context.Nodes.Where(n => n.ParentId == node.ParentId).ToList();
     }
 
     public List<Node> GetChildren(int id)
@@ -62,48 +69,46 @@ public class NodeService
     public Node GetNode(int id)
     {
         _logger.LogInformation("Get node #{Id}", id);
-        
+
         var node = _context.Nodes
             .AsNoTracking()
             .SingleOrDefault(x => x.Id == id);
 
         if (node is not null)
             return node;
-        
+
         _logger.LogWarning("Node #{Id} not found", id);
         throw new Exception($"Node #{id} not found");
-
     }
-    
+
     private Node GetNodeWithTracking(int id)
     {
         _logger.LogInformation("Get node #{Id} with tracking", id);
-        
+
         var node = _context.Nodes
             .SingleOrDefault(x => x.Id == id);
 
         if (node is not null)
             return node;
-        
+
         _logger.LogWarning("Node #{Id} not found", id);
         throw new Exception($"Node #{id} not found");
-
     }
-    
+
     public void RenameNode(int id, string name)
     {
         _logger.LogInformation("Rename node #{Id} to {NewName}", id, name);
-        
+
         var node = GetNodeWithTracking(id);
 
         node.Name = name;
         _context.SaveChanges();
     }
-    
+
     public void ChangeParent(int id, int? newParentId)
     {
         _logger.LogInformation("Change parent of node #{Id} to #{NewParentId}", id, newParentId);
-        
+
         if (id == newParentId)
         {
             _logger.LogWarning("Cannot change parent to itself");
@@ -129,7 +134,7 @@ public class NodeService
         var node = GetNodeWithTracking(id);
 
         _context.Nodes.Remove(node);
-        
+
         if (GetChildren(node.Id) is var children && children.Any())
         {
             foreach (var child in children)
@@ -137,7 +142,7 @@ public class NodeService
                 DeleteNodeRecursively(child.Id);
             }
         }
-        
+
         _context.SaveChanges();
     }
 
@@ -151,43 +156,49 @@ public class NodeService
     public void Seed()
     {
         _logger.LogInformation("Seed database");
-        
+
         // layer 0 (roots)
         var pineapple = new Node { Name = "Pineapple", ParentId = null };
-        _context.Nodes.Add(pineapple);
+        AddNode(pineapple);
         var lime = new Node { Name = "Lime", ParentId = null };
-        _context.Nodes.Add(lime);
-        _context.SaveChanges();
+        AddNode(lime);
         
         // layer 1
         var apple = new Node { Name = "Apple", ParentId = pineapple.Id };
-        _context.Nodes.Add(apple);
+        AddNode(apple);
         var banana = new Node { Name = "Banana", ParentId = pineapple.Id };
-        _context.Nodes.Add(banana);
+        AddNode(banana);
         var orange = new Node { Name = "Orange", ParentId = pineapple.Id };
-        _context.Nodes.Add(orange);
+        AddNode(orange);
         var cherry = new Node { Name = "Cherry", ParentId = pineapple.Id };
-        _context.Nodes.Add(cherry);
-        
+        AddNode(cherry);
+
         var lemon = new Node { Name = "Lemon", ParentId = lime.Id };
-        _context.Nodes.Add(lemon);
-        _context.SaveChanges();
-        
+        AddNode(lemon);
+        var avocado = new Node { Name = "Avocado", ParentId = lime.Id };
+        AddNode(avocado);
+        var kiwi = new Node { Name = "Kiwi", ParentId = lime.Id };
+        AddNode(kiwi);
+
         // layer 2
         var peach = new Node { Name = "Peach", ParentId = banana.Id };
-        _context.Nodes.Add(peach);
+        AddNode(peach);
         var pear = new Node { Name = "Pear", ParentId = banana.Id };
-        _context.Nodes.Add(pear);
+        AddNode(pear);
+        var plum = new Node { Name = "Plum", ParentId = banana.Id };
+        AddNode(plum);
         
         var grapefruit = new Node { Name = "Grapefruit", ParentId = lemon.Id };
-        _context.Nodes.Add(grapefruit);
+        AddNode(grapefruit);
         var mango = new Node { Name = "Mango", ParentId = lemon.Id };
-        _context.Nodes.Add(mango);
-        _context.SaveChanges();
-        
+        AddNode(mango);
+
         // layer 3
         var strawberry = new Node { Name = "Strawberry", ParentId = pear.Id };
-        _context.Nodes.Add(strawberry);
+        AddNode(strawberry);
+        var watermelon = new Node { Name = "Watermelon", ParentId = pear.Id };
+        AddNode(watermelon);
+
         _context.SaveChanges();
     }
 
@@ -206,7 +217,7 @@ public class NodeService
             .AsNoTracking()
             .Where(x => x.ParentId == null).ToList();
     }
-    
+
     public string GetName(int id)
     {
         _logger.LogInformation("Get name of node #{Id}", id);
