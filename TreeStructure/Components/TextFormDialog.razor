@@ -8,8 +8,6 @@
             <div class="modal-header">
                 <h3 class="modal-title">
                     @Title
-                    <span class="text-primary">@NodeService.GetName(NodeId)</span>
-                    <span class="text-muted">#@NodeId</span>
                 </h3>
                 <button type="button" class="btn-close" @onclick="@OnCancel"></button>
             </div>
@@ -36,13 +34,9 @@
 </div>
 
 @code {
-
+    
     [Parameter]
-    [EditorRequired]
-    public int NodeId { get; set; }
-
-    [Parameter]
-    public string? Title { get; set; }
+    public RenderFragment? Title { get; set; }
 
     [Parameter]
     public string? ConfirmButtonText { get; set; }
