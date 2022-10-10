@@ -47,6 +47,12 @@
             Expand all
         </button>
     </div>
+    <div class="p-2">
+        <button type="button" class="btn btn-dark text-nowrap" @onclick="OnAddRoot">
+            <img src="img/add-white.svg" alt="expand"/>
+            Add root
+        </button>
+    </div>
 </div>
 
 @code {
@@ -68,10 +74,13 @@
 
     [Parameter]
     public EventCallback OnExpandAll { get; set; }
+    
+    [Parameter]
+    public EventCallback OnAddRoot { get; set; }
 
     [Parameter]
     public bool IsSortAscending { get; set; }
-    
+
     [Parameter]
     public bool IsSortDescending { get; set; }
 
