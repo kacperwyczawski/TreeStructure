@@ -29,9 +29,13 @@
     <div class="p-1">
         <span class="text-muted">#@NodeId</span>
     </div>
-    
+
+    <div class="p-1">
+        di: @NodeService.GetNode(NodeId).DisplayIndex
+    </div>
+
     <div class="flex-grow-1"></div>
-    
+
     <div class="p-1">
         <a @onclick="@OnMoveUp">
             <img src="img/move-up.svg" alt="move up"/>
@@ -115,13 +119,13 @@
 
     [Parameter]
     public EventCallback OnMove { get; set; }
-    
+
     [Parameter]
     public EventCallback OnMoveUp { get; set; }
 
     [Parameter]
     public EventCallback OnMoveDown { get; set; }
-    
+
     [Parameter]
     [EditorRequired]
     public Tree ParentTree { get; set; } = null!;
