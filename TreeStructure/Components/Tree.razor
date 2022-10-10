@@ -16,7 +16,8 @@
                   OnEdit="@(() => OnEdit.InvokeAsync(NodeId))"
                   OnMove="@(() => OnMove.InvokeAsync(NodeId))"
                   IsCollapsed="@IsCollapsed"
-                  CanBeExpanded="@NodeService.HasChildren(NodeId)"/>
+                  CanBeExpanded="@NodeService.HasChildren(NodeId)"
+                  ParentTree="@this"/>
     }
     @if (GetSortedChildren() is var children && children.Any() && !IsCollapsed)
     {
@@ -55,6 +56,11 @@
 
     [Parameter]
     public bool SortDescending { get; set; }
+    
+    public void Refresh()
+    {
+        StateHasChanged();
+    }
 
     public bool IsCollapsed = true;
 
