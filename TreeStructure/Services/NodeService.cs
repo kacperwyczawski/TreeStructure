@@ -18,9 +18,21 @@ public class NodeService
 
     public void AddNode(Node node)
     {
-        _logger.LogInformation("Add node {Node}", node);
+        // assign the node display index
+        node.DisplayIndex = GetNextDisplayIndex(node.ParentId);
+        
+        _logger.LogInformation("Add node {Node} with assigned display index {DisplayIndex}",
+            node, node.DisplayIndex);
         _context.Nodes.Add(node);
         _context.SaveChanges();
+    }
+    
+    private int GetNextDisplayIndex(int? parentId)
+    {
+        var maxDisplayIndex = _context.Nodes
+            .Where(n => n.ParentId == parentId)
+            .Max(n => n.DisplayIndex);
+        return maxDisplayIndex + 1;
     }
 
     public List<Node> GetChildren(int id)
