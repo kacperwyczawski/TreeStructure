@@ -16,6 +16,18 @@
                     OnClose="@OnMoveNodeDialogClose"/>
 }
 
+@if (_showAddRootDialog)
+{
+    <TextFormDialog ConfirmButtonText="Add"
+                    LabelText="Enter name for root node"
+                    OnCancel="@(() => { _showAddRootDialog = false; Logger.LogInformation("Hide add root dialog"); })"
+                    OnConfirm="@OnAddRoot">
+        <Title>
+            Add root node
+        </Title>
+    </TextFormDialog>
+}
+
 <NodeForm OnAddNode="@(n => NodeService.AddNode(n))"/>
 
 <Buttons
@@ -26,7 +38,8 @@
     OnDeleteAll="@(() => NodeService.DeleteAllNodes())"
     OnSampleData="@(() => { NodeService.DeleteAllNodes(); NodeService.Seed(); })"
     OnExpandAll="@(() => OnExpandAll(_treeReference))"
-    OnCollapseAll="@(() => OnCollapseAll(_treeReference))"/>
+    OnCollapseAll="@(() => OnCollapseAll(_treeReference))"
+    OnAddRoot="@(() => { _showAddRootDialog = true; Logger.LogInformation("Show add root dialog"); })"/>
 
 <!-- tree structure -->
 @if (NodeService.GetRootNodes().Any())
@@ -76,6 +89,8 @@ else
     bool _showDeleteNodeWithChildrenDialog;
 
     bool _showMoveNodeDialog;
+
+    bool _showAddRootDialog;
 
     int? _currentNodeId;
 
@@ -135,7 +150,7 @@ else
 
     private void OnCollapseAll(Tree? tree)
     {
-        // not working
+    // not working
         if (tree == null)
             return;
 
@@ -146,13 +161,20 @@ else
 
     private void OnExpandAll(Tree? tree)
     {
-        // not working
+    // not working
         if (tree == null)
             return;
 
         tree.IsCollapsed = false;
         StateHasChanged();
         OnExpandAll(tree.ChildReference);
+    }
+
+    private void OnAddRoot(string name)
+    {
+        NodeService.AddNode(new Node { Name = name });
+        _showAddRootDialog = false;
+        Logger.LogInformation("Hide add root dialog");
     }
 
 }
