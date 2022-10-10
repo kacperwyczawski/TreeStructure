@@ -4,13 +4,6 @@
 @inject NodeService NodeService
 @inject ILogger<Index> Logger
 
-@if (_showNodeEditDialog && _currentNodeId is not null)
-{
-    <RenameNodeDialog
-        NodeId ="@((int)_currentNodeId)"
-        OnClose="@OnRenameNodeDialogClose"/>
-}
-
 @if (_showDeleteNodeWithChildrenDialog && _currentNodeId is not null)
 {
     <DeleteNodeWithChildrenDialog NodeId="@((int)_currentNodeId)"
@@ -44,7 +37,6 @@
             <ol>
                 <Tree @ref="@_treeReference"
                       NodeId="@rootNode.Id"
-                      OnEdit="@OnNodeEdit"
                       OnMove="@OnMoveNode"
                       OnDelete="@OnDelete"
                       SortAscending="@_sortAscending"
@@ -81,8 +73,6 @@ else
             (false, false) or (true, true) => rootNodes };
     }
 
-    bool _showNodeEditDialog;
-
     bool _showDeleteNodeWithChildrenDialog;
 
     bool _showMoveNodeDialog;
@@ -90,13 +80,6 @@ else
     int? _currentNodeId;
 
     Tree _treeReference;
-
-    void OnNodeEdit(int id)
-    {
-        _showNodeEditDialog = true;
-        Logger.LogInformation("Show node edit dialog");
-        _currentNodeId = id;
-    }
 
     void OnMoveNode(int id)
     {
@@ -148,13 +131,6 @@ else
         _showMoveNodeDialog = false;
         _currentNodeId = null;
         Logger.LogInformation("Hide move node dialog");
-    }
-
-    private void OnRenameNodeDialogClose()
-    {
-        _showNodeEditDialog = false;
-        _currentNodeId = null;
-        Logger.LogInformation("Hide node edit dialog");
     }
 
     private void OnCollapseAll(Tree? tree)

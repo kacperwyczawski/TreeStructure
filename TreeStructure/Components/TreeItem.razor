@@ -24,6 +24,7 @@
         }
     </div>
     <div class="p-1">
+        @* TODO: get name from service *@
         <span>@Text</span>
     </div>
     <div class="p-1 flex-grow-1">
@@ -35,7 +36,7 @@
         </a>
     </div>
     <div class="p-1">
-        <a @onclick="@OnEdit">
+        <a @onclick="@(() => _showRenameDialog = true)">
             <img src="img/edit.svg" alt="edit"/>
         </a>
     </div>
@@ -59,6 +60,17 @@
                     LabelText="Enter name for new node"
                     OnCancel="@(() => _showAddDialog = false)"
                     OnConfirm="@OnAdd"/>
+}
+
+@if (_showRenameDialog)
+{
+    <TextFormDialog NodeId="@Id"
+                    Title="Rename node: "
+                    ConfirmButtonText="Rename"
+                    LabelText="Enter new name for node"
+                    PlaceholderText="@NodeService.GetName(Id)"
+                    OnCancel="@(() => _showRenameDialog = false)"
+                    OnConfirm="@OnRename"/>
 }
 
 @code {
@@ -85,9 +97,6 @@
     public EventCallback OnDelete { get; set; }
 
     [Parameter]
-    public EventCallback OnEdit { get; set; }
-
-    [Parameter]
     public EventCallback OnMove { get; set; }
     
     [Parameter]
@@ -95,12 +104,21 @@
     public Tree ParentTree { get; set; } = null!;
 
     bool _showAddDialog;
+    
+    bool _showRenameDialog;
 
     void OnAdd(string name)
     {
         _showAddDialog = false;
         var node = new Node { Name = name, ParentId = Id };
         NodeService.AddNode(node);
+        ParentTree.Refresh();
+    }
+
+    private void OnRename(string name)
+    {
+        _showRenameDialog = false;
+        NodeService.RenameNode(Id, name);
         ParentTree.Refresh();
     }
 

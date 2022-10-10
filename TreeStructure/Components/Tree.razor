@@ -13,7 +13,6 @@
                   OnCollapse="@(() => IsCollapsed = true)"
                   OnExpand="@(() => IsCollapsed = false)"
                   OnDelete="@(() => OnDelete.InvokeAsync(NodeId))"
-                  OnEdit="@(() => OnEdit.InvokeAsync(NodeId))"
                   OnMove="@(() => OnMove.InvokeAsync(NodeId))"
                   IsCollapsed="@IsCollapsed"
                   CanBeExpanded="@NodeService.HasChildren(NodeId)"
@@ -26,7 +25,6 @@
             {
                 <Tree @ref="@ChildReference"
                       NodeId="@child.Id"
-                      OnEdit="@OnEdit"
                       OnDelete="@OnDelete"
                       OnMove="@OnMove"
                       SortAscending="@SortAscending"
@@ -41,9 +39,6 @@
     [Parameter]
     [EditorRequired]
     public int NodeId { get; set; }
-
-    [Parameter]
-    public EventCallback<int> OnEdit { get; set; }
 
     [Parameter]
     public EventCallback<int> OnDelete { get; set; }
