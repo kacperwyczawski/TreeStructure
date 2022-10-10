@@ -24,11 +24,10 @@
         }
     </div>
     <div class="p-1">
-        @* TODO: get name from service *@
-        <span>@Text</span>
+        <span>@NodeService.GetName(NodeId)</span>
     </div>
     <div class="p-1 flex-grow-1">
-        <span class="text-muted">#@Id</span>
+        <span class="text-muted">#@NodeId</span>
     </div>
     <div class="p-1">
         <a @onclick="@(() => _showAddDialog = true)">
@@ -54,7 +53,7 @@
 
 @if (_showAddDialog)
 {
-    <TextFormDialog NodeId="@Id"
+    <TextFormDialog NodeId="@NodeId"
                     Title="Add child node to: "
                     ConfirmButtonText="Add"
                     LabelText="Enter name for new node"
@@ -64,11 +63,11 @@
 
 @if (_showRenameDialog)
 {
-    <TextFormDialog NodeId="@Id"
+    <TextFormDialog NodeId="@NodeId"
                     Title="Rename node: "
                     ConfirmButtonText="Rename"
                     LabelText="Enter new name for node"
-                    PlaceholderText="@NodeService.GetName(Id)"
+                    PlaceholderText="@NodeService.GetName(NodeId)"
                     OnCancel="@(() => _showRenameDialog = false)"
                     OnConfirm="@OnRename"/>
 }
@@ -76,10 +75,7 @@
 @code {
 
     [Parameter]
-    public string? Text { get; set; }
-
-    [Parameter]
-    public int Id { get; set; }
+    public int NodeId { get; set; }
 
     [Parameter]
     public bool IsCollapsed { get; set; }
@@ -110,7 +106,7 @@
     void OnAdd(string name)
     {
         _showAddDialog = false;
-        var node = new Node { Name = name, ParentId = Id };
+        var node = new Node { Name = name, ParentId = NodeId };
         NodeService.AddNode(node);
         ParentTree.Refresh();
     }
@@ -118,7 +114,7 @@
     private void OnRename(string name)
     {
         _showRenameDialog = false;
-        NodeService.RenameNode(Id, name);
+        NodeService.RenameNode(NodeId, name);
         ParentTree.Refresh();
     }
 
