@@ -29,7 +29,19 @@
     <div class="p-1">
         <span class="text-muted">#@NodeId</span>
     </div>
+    
     <div class="flex-grow-1"></div>
+    
+    <div class="p-1">
+        <a @onclick="@OnMoveUp">
+            <img src="img/move-up.svg" alt="move up"/>
+        </a>
+    </div>
+    <div class="p-1">
+        <a @onclick="@OnMoveDown">
+            <img src="img/move-down.svg" alt="move down"/>
+        </a>
+    </div>
     <div class="p-1">
         <a @onclick="@(() => _showAddDialog = true)">
             <img src="img/add.svg" alt="add"/>
@@ -103,7 +115,13 @@
 
     [Parameter]
     public EventCallback OnMove { get; set; }
+    
+    [Parameter]
+    public EventCallback OnMoveUp { get; set; }
 
+    [Parameter]
+    public EventCallback OnMoveDown { get; set; }
+    
     [Parameter]
     [EditorRequired]
     public Tree ParentTree { get; set; } = null!;
