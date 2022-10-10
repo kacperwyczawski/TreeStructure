@@ -53,23 +53,31 @@
 
 @if (_showAddDialog)
 {
-    <TextFormDialog NodeId="@NodeId"
-                    Title="Add child node to: "
-                    ConfirmButtonText="Add"
+    <TextFormDialog ConfirmButtonText="Add"
                     LabelText="Enter name for new node"
                     OnCancel="@(() => _showAddDialog = false)"
-                    OnConfirm="@OnAdd"/>
+                    OnConfirm="@OnAdd">
+        <Title>
+            Add child node to:
+            <span class="text-primary">@NodeService.GetName(NodeId)</span>
+            <span class="text-muted">#@NodeId</span>
+        </Title>
+    </TextFormDialog>
 }
 
 @if (_showRenameDialog)
 {
-    <TextFormDialog NodeId="@NodeId"
-                    Title="Rename node: "
-                    ConfirmButtonText="Rename"
+    <TextFormDialog ConfirmButtonText="Rename"
                     LabelText="Enter new name for node"
                     PlaceholderText="@NodeService.GetName(NodeId)"
                     OnCancel="@(() => _showRenameDialog = false)"
-                    OnConfirm="@OnRename"/>
+                    OnConfirm="@OnRename">
+        <Title>
+            Rename node:
+            <span class="text-primary">@NodeService.GetName(NodeId)</span>
+            <span class="text-muted">#@NodeId</span>
+        </Title>
+    </TextFormDialog>
 }
 
 @code {
@@ -94,13 +102,13 @@
 
     [Parameter]
     public EventCallback OnMove { get; set; }
-    
+
     [Parameter]
     [EditorRequired]
     public Tree ParentTree { get; set; } = null!;
 
     bool _showAddDialog;
-    
+
     bool _showRenameDialog;
 
     void OnAdd(string name)
