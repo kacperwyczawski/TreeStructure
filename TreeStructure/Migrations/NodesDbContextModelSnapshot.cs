@@ -19,8 +19,11 @@ namespace TreeStructure.Migrations
 
             modelBuilder.Entity("TreeStructure.Models.Node", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DisplayIndex")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
