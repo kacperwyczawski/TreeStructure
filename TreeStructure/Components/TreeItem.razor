@@ -4,13 +4,13 @@
         {
             @if (IsCollapsed)
             {
-                <a @onclick="OnExpand">
+                <a @onclick="@OnExpand">
                     <img src="img/expand.svg" alt="expand"/>
                 </a>
             }
             else
             {
-                <a @onclick="OnCollapse">
+                <a @onclick="@OnCollapse">
                     <img src="img/collapse.svg" alt="collapse"/>
                 </a>
             }
@@ -27,17 +27,22 @@
         <span class="text-muted">#@Id</span>
     </div>
     <div class="p-1">
-        <a @onclick="OnEdit">
+        <a @onclick="@OnAdd">
+            <img src="img/add.svg" alt="add"/>
+        </a>
+    </div>
+    <div class="p-1">
+        <a @onclick="@OnEdit">
             <img src="img/edit.svg" alt="edit"/>
         </a>
     </div>
     <div class="p-1">
-        <a @onclick="OnMove">
+        <a @onclick="@OnMove">
             <img src="img/move.svg" alt="move"/>
         </a>
     </div>
     <div class="p-1">
-        <a @onclick="OnDelete">
+        <a @onclick="@OnDelete">
             <img src="img/delete.svg" alt="delete"/>
         </a>
     </div>
@@ -71,5 +76,8 @@
 
     [Parameter]
     public EventCallback OnMove { get; set; }
+    
+    [Parameter]
+    public EventCallback OnAdd { get; set; }
 
 }
