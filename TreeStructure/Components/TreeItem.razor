@@ -23,12 +23,13 @@
             <img src="img/expand.svg" alt="expand" style="opacity: 0.25;"/>
         }
     </div>
-    <div class="p-1">
+    <div class="p-1" @ondblclick="@(() => _showRenameDialog = true)">
         <span>@NodeService.GetName(NodeId)</span>
     </div>
-    <div class="p-1 flex-grow-1">
+    <div class="p-1">
         <span class="text-muted">#@NodeId</span>
     </div>
+    <div class="flex-grow-1"></div>
     <div class="p-1">
         <a @onclick="@(() => _showAddDialog = true)">
             <img src="img/add.svg" alt="add"/>
