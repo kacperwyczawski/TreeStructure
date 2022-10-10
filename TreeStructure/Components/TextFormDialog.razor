@@ -1,0 +1,72 @@
+@using TreeStructure.Services
+@inject NodeService NodeService
+
+<div class="modal" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    @Title
+                    <span class="text-primary">@NodeService.GetName(NodeId)</span>
+                    <span class="text-muted">#@NodeId</span>
+                </h3>
+                <button type="button" class="btn-close" @onclick="@OnCancel"></button>
+            </div>
+
+            <div class="modal-body">
+                <form>
+                    <label for="input" class="form-label">@LabelText</label>
+                    <input type="text"
+                           class="form-control"
+                           id="input"
+                           @bind="_formValue"
+                           placeholder="@PlaceholderText"
+                           required>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" @onclick="@OnCancel">Cancel</button>
+                <button type="button" class="btn btn-primary" @onclick="@HandleConfirm">@ConfirmButtonText</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    [EditorRequired]
+    public int NodeId { get; set; }
+
+    [Parameter]
+    public string? Title { get; set; }
+
+    [Parameter]
+    public string? ConfirmButtonText { get; set; }
+
+    [Parameter]
+    public string? LabelText { get; set; }
+    
+    [Parameter]
+    public string? PlaceholderText { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+    
+    [Parameter]
+    public EventCallback<string> OnConfirm { get; set; }
+
+    string? _formValue;
+
+    private void HandleConfirm()
+    {
+        if (string.IsNullOrWhiteSpace(_formValue))
+            return;
+        
+        OnConfirm.InvokeAsync(_formValue);
+    }
+
+}
