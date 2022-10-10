@@ -1,3 +1,6 @@
+@using TreeStructure.Services
+@inject NodeService NodeService
+
 <div class="border rounded mt-2 p-2 d-flex align-items-center">
     <div class="p-1">
         @if (CanBeExpanded)
@@ -27,7 +30,7 @@
         <span class="text-muted">#@Id</span>
     </div>
     <div class="p-1">
-        <a @onclick="@OnAdd">
+        <a @onclick="@(() => _showAddDialog = true)">
             <img src="img/add.svg" alt="add"/>
         </a>
     </div>
@@ -47,6 +50,16 @@
         </a>
     </div>
 </div>
+
+@if (_showAddDialog)
+{
+    <TextFormDialog NodeId="@Id"
+                    Title="Add child node to: "
+                    ConfirmButtonText="Add"
+                    LabelText="Enter name for new node"
+                    OnCancel="@(() => _showAddDialog = false)"
+                    OnConfirm="@OnAdd"/>
+}
 
 @code {
 
@@ -78,6 +91,17 @@
     public EventCallback OnMove { get; set; }
     
     [Parameter]
-    public EventCallback OnAdd { get; set; }
+    [EditorRequired]
+    public Tree ParentTree { get; set; } = null!;
+
+    bool _showAddDialog;
+
+    void OnAdd(string name)
+    {
+        _showAddDialog = false;
+        var node = new Node { Name = name, ParentId = Id };
+        NodeService.AddNode(node);
+        ParentTree.Refresh();
+    }
 
 }
