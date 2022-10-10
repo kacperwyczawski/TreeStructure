@@ -8,8 +8,7 @@
     *@
     @if (NodeService.Exists(NodeId))
     {
-        <TreeItem Text="@NodeService.GetName(NodeId)"
-                  Id="@NodeId"
+        <TreeItem NodeId="@NodeId"
                   OnCollapse="@(() => IsCollapsed = true)"
                   OnExpand="@(() => IsCollapsed = false)"
                   OnDelete="@(() => OnDelete.InvokeAsync(NodeId))"
