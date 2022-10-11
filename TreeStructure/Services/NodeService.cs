@@ -86,6 +86,28 @@ public class NodeService
         };
     }
 
+    public List<Node> GetRootNodes()
+    {
+        _logger.LogInformation("Get root nodes");
+        return _context.Nodes
+            .AsNoTracking()
+            .Where(x => x.ParentId == null).ToList();
+    }
+    
+    public List<Node> GetRootNodes(Sort sort)
+    {
+        var rootNodes = GetRootNodes();
+        _logger.LogInformation("Sort root nodes by Sort.{Sort}", sort);
+        return sort switch
+        {
+            Sort.Ascending => rootNodes.OrderBy(x => x.Name).ToList(),
+            Sort.Descending => rootNodes.OrderByDescending(x => x.Name).ToList(),
+            Sort.Custom => rootNodes.OrderBy(x => x.DisplayIndex).ToList(),
+            Sort.CustomReversed => rootNodes.OrderByDescending(x => x.DisplayIndex).ToList(),
+            _ => throw new ArgumentOutOfRangeException(nameof(sort), sort, null)
+        };
+    }
+
     public bool HasChildren(int id)
     {
         _logger.LogInformation("Check if node #{Id} has children", id);
@@ -230,14 +252,6 @@ public class NodeService
         return _context.Nodes
             .AsNoTracking()
             .ToList();
-    }
-
-    public List<Node> GetRootNodes()
-    {
-        _logger.LogInformation("Get root nodes");
-        return _context.Nodes
-            .AsNoTracking()
-            .Where(x => x.ParentId == null).ToList();
     }
 
     public string GetName(int id)
