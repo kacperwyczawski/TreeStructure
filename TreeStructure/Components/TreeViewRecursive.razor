@@ -5,9 +5,7 @@
     <li style="list-style-type: none">
 
         @* Node card *@
-        placeholder
-        id: @NodeId
-        name: @NodeService.GetNode(NodeId).Name
+        <TreeViewItem NodeId="NodeId" />
 
         @* Render children *@
         @if (NodeService.HasChildren(NodeId))

@@ -5,14 +5,14 @@
 {
     foreach (var rootNodeId in NodeService.GetRootNodes(Sort).Select(n => n.Id))
     {
-        <MudPaper Class="@ContainerClass" MaxWidth="1200px">
+        <MudPaper Class="py-4 pr-5 my-5 mx-auto" MaxWidth="1200px">
             <TreeViewRecursive NodeId="@rootNodeId"/>
         </MudPaper>
     }
 }
 else
 {
-    <MudPaper Class="@ContainerClass" MaxWidth="1200px">
+    <MudPaper Class="pa-5 my-5 mx-auto" MaxWidth="1200px">
         <MudStack Row="true">
             <MudIcon Icon="@Icons.Outlined.Info"/>
             <MudText Typo="Typo.body1">
@@ -23,8 +23,6 @@ else
 }
 
 @code {
-    
-    const string ContainerClass = "pa-5 my-5 mx-auto";
     
     [CascadingParameter]
     public NodeService.Sort Sort { get; set; }
