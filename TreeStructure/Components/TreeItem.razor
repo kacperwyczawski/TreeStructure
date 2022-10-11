@@ -30,22 +30,30 @@
         <span class="text-muted">#@NodeId</span>
     </div>
 
-    <div class="p-1">
-        di: @NodeService.GetNode(NodeId).DisplayIndex
-    </div>
-
     <div class="flex-grow-1"></div>
-
-    <div class="p-1">
-        <a @onclick="@OnMoveUp">
-            <img src="img/move-up.svg" alt="move up"/>
-        </a>
-    </div>
-    <div class="p-1">
-        <a @onclick="@OnMoveDown">
-            <img src="img/move-down.svg" alt="move down"/>
-        </a>
-    </div>
+    
+    @if (ShowDisplayIndex)
+    {
+        <div class="p-1">
+            <a @onclick="@OnMoveUp">
+                <img src="img/move-up.svg" alt="move up"/>
+            </a>
+        </div>
+    }
+    @if (ShowDisplayIndex)
+    {
+        <div class="p-1">
+            <span class="text-muted">@NodeService.GetNode(NodeId).DisplayIndex</span>
+        </div>
+    }
+    @if (ShowDisplayIndex)
+    {
+        <div class="p-1">
+            <a @onclick="@OnMoveDown">
+                <img src="img/move-down.svg" alt="move down"/>
+            </a>
+        </div>
+    }
     <div class="p-1">
         <a @onclick="@(() => _showAddDialog = true)">
             <img src="img/add.svg" alt="add"/>
@@ -107,6 +115,9 @@
 
     [Parameter]
     public bool CanBeExpanded { get; set; } = true;
+
+    [Parameter]
+    public bool ShowDisplayIndex { get; set; }
 
     [Parameter]
     public EventCallback OnExpand { get; set; }

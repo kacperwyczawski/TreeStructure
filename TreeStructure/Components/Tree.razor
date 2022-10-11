@@ -15,7 +15,8 @@
                   OnMove="@(() => OnMove.InvokeAsync(NodeId))"
                   IsCollapsed="@IsCollapsed"
                   CanBeExpanded="@NodeService.HasChildren(NodeId)"
-                  ParentTree="@this"/>
+                  ParentTree="@this"
+                  ShowDisplayIndex="@CanBeReordered"/>
     }
     @if (NodeService.GetChildren(NodeId, Sort) is var children && children.Any() && !IsCollapsed)
     {
@@ -56,6 +57,8 @@
 
     public Tree? ChildReference;
 
+    bool CanBeReordered => Sort is NodeService.Sort.Custom or NodeService.Sort.CustomReversed;
+    
     bool _showEditDialog = false;
 
 }
