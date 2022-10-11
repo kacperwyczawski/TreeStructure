@@ -29,10 +29,10 @@
 }
 
 <Buttons
-    OnDeleteAll="@(() => NodeService.DeleteAllNodes())"
-    OnSampleData="@(() => { NodeService.DeleteAllNodes(); NodeService.Seed(); })"
-    OnExpandAll="@(() => OnExpandAll(_treeReference))"
-    OnCollapseAll="@(() => OnCollapseAll(_treeReference))"
+    OnDeleteAll="@(() => { NodeService.DeleteAllNodes(); _treeReference.Refresh(); })"
+    OnSampleData="@(() => { NodeService.DeleteAllNodes(); NodeService.Seed(); _treeReference.Refresh(); })"
+    OnExpandAll="@(() => OnExpandAll(_treeRecursiveReference))"
+    OnCollapseAll="@(() => OnCollapseAll(_treeRecursiveReference))"
     OnAddRoot="@(() => { _showAddRootDialog = true; Logger.LogInformation("Show add root dialog"); })"/>
 
 <div class="my-4 p-4 container rounded shadow">
@@ -75,7 +75,11 @@ else
     </div>
 }
 
+<TreeView @ref="_treeReference"/>
+
 @code {
+    
+    TreeView _treeReference = null!;
 
     NodeService.Sort _sortType;
 
