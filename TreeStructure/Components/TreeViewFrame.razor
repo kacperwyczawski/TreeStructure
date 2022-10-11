@@ -3,10 +3,10 @@
 
 @if (NodeService.GetRootNodes(Sort).Any())
 {
-    foreach (var rootNode in NodeService.GetRootNodes(Sort))
+    foreach (var rootNodeId in NodeService.GetRootNodes(Sort).Select(n => n.Id))
     {
         <MudPaper Class="@ContainerClass" MaxWidth="1200px">
-            
+            <TreeViewRecursive NodeId="@rootNodeId"/>
         </MudPaper>
     }
 }
