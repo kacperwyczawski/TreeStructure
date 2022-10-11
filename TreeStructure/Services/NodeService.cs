@@ -34,7 +34,8 @@ public class NodeService
     {
         Ascending,
         Descending,
-        Custom
+        Custom,
+        CustomReversed
     }
 
     public void AddNode(Node node)
@@ -80,6 +81,7 @@ public class NodeService
             Sort.Ascending => children.OrderBy(x => x.Name).ToList(),
             Sort.Descending => children.OrderByDescending(x => x.Name).ToList(),
             Sort.Custom => children.OrderBy(x => x.DisplayIndex).ToList(),
+            Sort.CustomReversed => children.OrderByDescending(x => x.DisplayIndex).ToList(),
             _ => throw new ArgumentOutOfRangeException(nameof(sort), sort, null)
         };
     }
