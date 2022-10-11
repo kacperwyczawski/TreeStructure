@@ -1,0 +1,37 @@
+@using TreeStructure.Services
+@inject NodeService NodeService
+
+@if (NodeService.GetRootNodes(Sort).Any())
+{
+    foreach (var rootNode in NodeService.GetRootNodes(Sort))
+    {
+        <MudPaper Class="@ContainerClass" MaxWidth="1200px">
+            
+        </MudPaper>
+    }
+}
+else
+{
+    <MudPaper Class="@ContainerClass" MaxWidth="1200px">
+        <MudStack Row="true">
+            <MudIcon Icon="@Icons.Outlined.Info"/>
+            <MudText Typo="Typo.body1">
+                Add some nodes manulally or use sample data button to see tree structure
+            </MudText>
+        </MudStack>
+    </MudPaper>
+}
+
+@code {
+    
+    const string ContainerClass = "pa-5 my-5 mx-auto";
+    
+    [CascadingParameter]
+    public NodeService.Sort Sort { get; set; }
+    
+    public void Refresh()
+    {
+        StateHasChanged();
+    }
+
+}
