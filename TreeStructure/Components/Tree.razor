@@ -16,7 +16,9 @@
                   IsCollapsed="@IsCollapsed"
                   CanBeExpanded="@NodeService.HasChildren(NodeId)"
                   ParentTree="@this"
-                  ShowDisplayIndex="@CanBeReordered"/>
+                  ShowDisplayIndex="@CanBeReordered"
+                  OnMoveDown="@(() => OnMoveDown.InvokeAsync(NodeId))"
+                  OnMoveUp="@(() => OnMoveUp.InvokeAsync(NodeId))" />
     }
     @if (NodeService.GetChildren(NodeId, Sort) is var children && children.Any() && !IsCollapsed)
     {
@@ -27,7 +29,9 @@
                       NodeId="@child.Id"
                       OnDelete="@OnDelete"
                       OnMove="@OnMove"
-                      Sort="@Sort"/>
+                      Sort="@Sort"
+                      OnMoveDown="@OnMoveDown"
+                      OnMoveUp="@OnMoveUp"/>
             }
         </ol>
     }
@@ -45,6 +49,12 @@
     [Parameter]
     public EventCallback<int> OnMove { get; set; }
     
+    [Parameter]
+    public EventCallback<int> OnMoveUp { get; set; }
+    
+    [Parameter]
+    public EventCallback<int> OnMoveDown { get; set; }
+
     [Parameter]
     public NodeService.Sort Sort { get; set; } = NodeService.Sort.Ascending;
     
