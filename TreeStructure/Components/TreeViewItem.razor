@@ -1,0 +1,29 @@
+@using TreeStructure.Services
+@inject NodeService NodeService
+
+<MudPaper Class="pa-3 ma-3 d-flex">
+    <MudStack Row="true" AlignItems="AlignItems.Center">
+        <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Outlined.ChevronRight" Size="Size.Small"/>
+        <MudText Typo="Typo.h6">
+            <strong>@NodeService.GetNode(NodeId).Name</strong>
+        </MudText>
+        <MudText Class="grey-text">
+            #@NodeId
+        </MudText>
+    </MudStack>
+    <div class="flex-grow-1"></div>
+    <MudStack Row="true" AlignItems="AlignItems.Center">
+        <MudFab Color="Color.Success" StartIcon="@Icons.Material.Outlined.Add" Size="Size.Small"/>
+        <MudFab StartIcon="@Icons.Material.Outlined.EditNote" Size="Size.Small"/>
+        <MudFab Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" Size="Size.Small"/>
+    </MudStack>
+</MudPaper>
+
+
+@code {
+
+    [Parameter]
+    [EditorRequired]
+    public int NodeId { get; set; }
+
+}
