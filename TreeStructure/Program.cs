@@ -1,3 +1,4 @@
+using MudBlazor.Services;
 using TreeStructure.Data;
 using TreeStructure.Services;
 
@@ -8,6 +9,8 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services.AddSqlite<NodesDbContext>("Data Source=Nodes.db");
 builder.Services.AddScoped<NodeService>();
+
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 
