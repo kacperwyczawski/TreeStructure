@@ -10,10 +10,31 @@ public class NodeService
 
     private readonly ILogger<NodeService> _logger;
 
+    private Node GetNodeWithTracking(int id)
+    {
+        _logger.LogInformation("Get node #{Id} with tracking", id);
+
+        var node = _context.Nodes
+            .SingleOrDefault(x => x.Id == id);
+
+        if (node is not null)
+            return node;
+
+        _logger.LogWarning("Node #{Id} not found", id);
+        throw new Exception($"Node #{id} not found");
+    }
+
     public NodeService(NodesDbContext context, ILogger<NodeService> logger)
     {
         _context = context;
         _logger = logger;
+    }
+    
+    public enum Sort
+    {
+        Ascending,
+        Descending,
+        Custom
     }
 
     public void AddNode(Node node)
@@ -49,6 +70,19 @@ public class NodeService
             .AsNoTracking()
             .Where(x => x.ParentId == id).ToList();
     }
+    
+    public List<Node> GetChildren(int id, Sort sort)
+    {
+        var children = GetChildren(id);
+        _logger.LogInformation("Sort children for node #{Id} by Sort.{Sort}", id, sort);
+        return sort switch
+        {
+            Sort.Ascending => children.OrderBy(x => x.Name).ToList(),
+            Sort.Descending => children.OrderByDescending(x => x.Name).ToList(),
+            Sort.Custom => children.OrderBy(x => x.DisplayIndex).ToList(),
+            _ => throw new ArgumentOutOfRangeException(nameof(sort), sort, null)
+        };
+    }
 
     public bool HasChildren(int id)
     {
@@ -72,20 +106,6 @@ public class NodeService
 
         var node = _context.Nodes
             .AsNoTracking()
-            .SingleOrDefault(x => x.Id == id);
-
-        if (node is not null)
-            return node;
-
-        _logger.LogWarning("Node #{Id} not found", id);
-        throw new Exception($"Node #{id} not found");
-    }
-
-    private Node GetNodeWithTracking(int id)
-    {
-        _logger.LogInformation("Get node #{Id} with tracking", id);
-
-        var node = _context.Nodes
             .SingleOrDefault(x => x.Id == id);
 
         if (node is not null)
