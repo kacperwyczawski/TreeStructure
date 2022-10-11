@@ -48,7 +48,7 @@
 <!-- tree structure -->
 @if (NodeService.GetRootNodes().Any())
 {
-    @foreach (var rootNode in GetSortedRootNodes())
+    @foreach (var rootNode in NodeService.GetRootNodes(_sortType))
     {
         <div class="my-4 p-4 ps-0 container rounded shadow">
             <ol>
@@ -56,8 +56,7 @@
                       NodeId="@rootNode.Id"
                       OnMove="@OnMoveNode"
                       OnDelete="@OnDelete"
-                      SortAscending="@_sortAscending"
-                      SortDescending="@_sortDescending"/>
+                      Sort="@_sortType"/>
             </ol>
         </div>
     }
@@ -77,20 +76,6 @@ else
 @code {
 
     NodeService.Sort _sortType;
-
-    bool _sortAscending;
-
-    bool _sortDescending;
-
-    List<Node> GetSortedRootNodes()
-    {
-        var rootNodes = NodeService.GetRootNodes();
-
-        return (_sortAscending, _sortDescending) switch {
-            (true, false) => rootNodes.OrderBy(x => x.Name).ToList(),
-            (false, true) => rootNodes.OrderByDescending(x => x.Name).ToList(),
-            (false, false) or (true, true) => rootNodes };
-    }
 
     bool _showDeleteNodeWithChildrenDialog;
 
@@ -122,22 +107,6 @@ else
             NodeService.DeleteNodeRecursively(id);
             StateHasChanged();
         }
-    }
-
-    private void OnSortDescending()
-    {
-        _sortDescending = !_sortDescending;
-        _sortAscending = false;
-        Logger.LogInformation("Ascending sort: false");
-        Logger.LogInformation("Descending sort: {SortDescending}", _sortDescending);
-    }
-
-    private void OnSortAscending()
-    {
-        _sortAscending = !_sortAscending;
-        _sortDescending = false;
-        Logger.LogInformation("Ascending sort: {SortAscending}", _sortAscending);
-        Logger.LogInformation("Descending sort: false");
     }
 
     private void OnDeleteNodeDialogClose()

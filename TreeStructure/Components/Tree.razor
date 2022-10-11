@@ -17,7 +17,7 @@
                   CanBeExpanded="@NodeService.HasChildren(NodeId)"
                   ParentTree="@this"/>
     }
-    @if (GetSortedChildren() is var children && children.Any() && !IsCollapsed)
+    @if (NodeService.GetChildren(NodeId, Sort) is var children && children.Any() && !IsCollapsed)
     {
         <ol>
             @foreach (var child in children)
@@ -26,8 +26,7 @@
                       NodeId="@child.Id"
                       OnDelete="@OnDelete"
                       OnMove="@OnMove"
-                      SortAscending="@SortAscending"
-                      SortDescending="@SortDescending"/>
+                      Sort="@Sort"/>
             }
         </ol>
     }
@@ -44,12 +43,9 @@
 
     [Parameter]
     public EventCallback<int> OnMove { get; set; }
-
+    
     [Parameter]
-    public bool SortAscending { get; set; }
-
-    [Parameter]
-    public bool SortDescending { get; set; }
+    public NodeService.Sort Sort { get; set; } = NodeService.Sort.Ascending;
     
     public void Refresh()
     {
@@ -61,15 +57,5 @@
     public Tree? ChildReference;
 
     bool _showEditDialog = false;
-
-    List<Node> GetSortedChildren()
-    {
-        var children = NodeService.GetChildren(NodeId);
-
-        return (SortAscending, SortDescending) switch {
-            (true, false) => children.OrderBy(x => x.Name).ToList(),
-            (false, true) => children.OrderByDescending(x => x.Name).ToList(),
-            (false, false) or (true, true) => children };
-    }
 
 }
