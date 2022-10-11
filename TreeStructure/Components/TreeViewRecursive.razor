@@ -1,0 +1,29 @@
+@using TreeStructure.Services
+@inject NodeService NodeService
+
+<ol>
+    <li style="list-style-type: none">
+
+        @* Node card *@
+        placeholder
+        id: @NodeId
+        name: @NodeService.GetNode(NodeId).Name
+
+        @* Render children *@
+        @if (NodeService.HasChildren(NodeId))
+        {
+            @foreach (var childId in NodeService.GetChildren(NodeId).Select(n => n.Id))
+            {
+                <TreeViewRecursive NodeId="@childId" />
+            }
+        }
+
+    </li>
+</ol>
+
+@code {
+
+    [Parameter]
+    public int NodeId { get; set; }
+
+}
