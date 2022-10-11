@@ -18,20 +18,20 @@
                   ParentTree="@this"
                   ShowDisplayIndex="@CanBeReordered"
                   OnMoveDown="@(() => OnMoveDown.InvokeAsync(NodeId))"
-                  OnMoveUp="@(() => OnMoveUp.InvokeAsync(NodeId))" />
+                  OnMoveUp="@(() => OnMoveUp.InvokeAsync(NodeId))"/>
     }
     @if (NodeService.GetChildren(NodeId, Sort) is var children && children.Any() && !IsCollapsed)
     {
         <ol>
             @foreach (var child in children)
             {
-                <Tree @ref="@ChildReference"
-                      NodeId="@child.Id"
-                      OnDelete="@OnDelete"
-                      OnMove="@OnMove"
-                      Sort="@Sort"
-                      OnMoveDown="@OnMoveDown"
-                      OnMoveUp="@OnMoveUp"/>
+                <TreeRecursive @ref="@ChildReference"
+                               NodeId="@child.Id"
+                               OnDelete="@OnDelete"
+                               OnMove="@OnMove"
+                               Sort="@Sort"
+                               OnMoveDown="@OnMoveDown"
+                               OnMoveUp="@OnMoveUp"/>
             }
         </ol>
     }
@@ -48,16 +48,16 @@
 
     [Parameter]
     public EventCallback<int> OnMove { get; set; }
-    
+
     [Parameter]
     public EventCallback<int> OnMoveUp { get; set; }
-    
+
     [Parameter]
     public EventCallback<int> OnMoveDown { get; set; }
 
     [Parameter]
     public NodeService.Sort Sort { get; set; } = NodeService.Sort.Ascending;
-    
+
     public void Refresh()
     {
         StateHasChanged();
@@ -65,10 +65,10 @@
 
     public bool IsCollapsed = true;
 
-    public Tree? ChildReference;
+    public TreeRecursive? ChildReference;
 
     bool CanBeReordered => Sort is NodeService.Sort.Custom or NodeService.Sort.CustomReversed;
-    
+
     bool _showEditDialog = false;
 
 }

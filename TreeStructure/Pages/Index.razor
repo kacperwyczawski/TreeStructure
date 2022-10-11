@@ -52,13 +52,13 @@
     {
         <div class="my-4 p-4 ps-0 container rounded shadow">
             <ol>
-                <Tree @ref="@_treeReference"
-                      NodeId="@rootNode.Id"
-                      OnMove="@OnMoveNode"
-                      OnDelete="@OnDelete"
-                      Sort="@_sortType"
-                      OnMoveDown="@MoveDown"
-                      OnMoveUp="@MoveUp"/>
+                <TreeRecursive @ref="@_treeRecursiveReference"
+                               NodeId="@rootNode.Id"
+                               OnMove="@OnMoveNode"
+                               OnDelete="@OnDelete"
+                               Sort="@_sortType"
+                               OnMoveDown="@MoveDown"
+                               OnMoveUp="@MoveUp"/>
             </ol>
         </div>
     }
@@ -87,7 +87,7 @@ else
 
     int? _currentNodeId;
 
-    Tree _treeReference;
+    TreeRecursive _treeRecursiveReference;
 
     void OnMoveNode(int id)
     {
@@ -125,7 +125,7 @@ else
         Logger.LogInformation("Hide move node dialog");
     }
 
-    private void OnCollapseAll(Tree? tree)
+    private void OnCollapseAll(TreeRecursive? tree)
     {
     // not working
         if (tree == null)
@@ -136,7 +136,7 @@ else
         OnExpandAll(tree.ChildReference);
     }
 
-    private void OnExpandAll(Tree? tree)
+    private void OnExpandAll(TreeRecursive? tree)
     {
     // not working
         if (tree == null)
@@ -158,7 +158,7 @@ else
     {
         Logger.LogInformation("Move down node #{NodeId} with display index {DisplayIndex}",
             id, NodeService.GetNode(id).DisplayIndex);
-        
+
         NodeService.MoveDown(id);
         
         // TODO: refresh roots, maybe extract new component for tree, and use cascading params
@@ -168,7 +168,7 @@ else
     {
         Logger.LogInformation("Move up node #{NodeId} with display index {DisplayIndex}",
             id, NodeService.GetNode(id).DisplayIndex);
-        
+
         NodeService.MoveUp(id);
     }
 
