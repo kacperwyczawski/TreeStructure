@@ -199,6 +199,8 @@ public class NodeService
 
     public void Seed()
     {
+        DeleteAllNodes();
+        
         _logger.LogInformation("Seed database");
 
         // layer 0 (roots)
