@@ -2,6 +2,7 @@
 @inject NodeService NodeService
 
 <div class="border rounded mt-2 p-2 d-flex align-items-center">
+
     <div class="p-1">
         @if (CanBeExpanded)
         {
@@ -23,57 +24,60 @@
             <img src="img/expand.svg" alt="expand" style="opacity: 0.25;"/>
         }
     </div>
+
     <div class="p-1" @ondblclick="@(() => _showRenameDialog = true)">
         <span>@NodeService.GetName(NodeId)</span>
     </div>
+
     <div class="p-1">
         <span class="text-muted">#@NodeId</span>
     </div>
 
     <div class="flex-grow-1"></div>
-    
+
     @if (ShowDisplayIndex)
     {
         <div class="p-1">
-            <a @onclick="@OnMoveUp">
-                <img src="img/move-up.svg" alt="move up"/>
+            <a @onclick="@(() => { if (CanBeMovedUp) OnMoveUp.InvokeAsync(); })">
+                <img src="img/move-up.svg" alt="move up" style="@(CanBeMovedUp ? "" : "opacity: 0.25;")"/>
             </a>
         </div>
-    }
-    @if (ShowDisplayIndex)
-    {
+
         <div class="p-1">
             <span class="text-muted">@NodeService.GetNode(NodeId).DisplayIndex</span>
         </div>
-    }
-    @if (ShowDisplayIndex)
-    {
+
         <div class="p-1">
-            <a @onclick="@OnMoveDown">
-                <img src="img/move-down.svg" alt="move down"/>
+            <a @onclick="@(() => { if (CanBeMovedDown) OnMoveDown.InvokeAsync(); })">
+                <img src="img/move-down.svg" alt="move down" style="@(CanBeMovedDown ? "" : "opacity: 0.25;")"/>
             </a>
         </div>
     }
+
     <div class="p-1">
         <a @onclick="@(() => _showAddDialog = true)">
             <img src="img/add.svg" alt="add"/>
         </a>
     </div>
+
     <div class="p-1">
         <a @onclick="@(() => _showRenameDialog = true)">
             <img src="img/edit.svg" alt="edit"/>
         </a>
     </div>
+
     <div class="p-1">
         <a @onclick="@OnMove">
             <img src="img/move.svg" alt="move"/>
         </a>
     </div>
+
     <div class="p-1">
         <a @onclick="@OnDelete">
             <img src="img/delete.svg" alt="delete"/>
         </a>
     </div>
+
 </div>
 
 @if (_showAddDialog)
@@ -144,6 +148,10 @@
     bool _showAddDialog;
 
     bool _showRenameDialog;
+
+    bool CanBeMovedUp => NodeService.GetNode(NodeId).DisplayIndex > 0;
+
+    bool CanBeMovedDown => NodeService.GetNode(NodeId).DisplayIndex < NodeService.GetSiblingNodes(NodeId).Count - 1;
 
     void OnAdd(string name)
     {

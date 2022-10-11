@@ -54,6 +54,50 @@ public class NodeService
         // save again
         _context.SaveChanges();
     }
+    
+    public void MoveUp(int id)
+    {
+        _logger.LogInformation("Move node #{Id} up", id);
+        var node = GetNodeWithTracking(id);
+        var displayIndex = node.DisplayIndex;
+        
+        if (displayIndex == 0)
+        {
+            _logger.LogWarning("Node #{Id} is already at the top", id);
+            return;
+        }
+        
+        var siblings = GetSiblingNodes(node.Id);
+        var nodeAbove = siblings.Single(n => n.DisplayIndex == displayIndex - 1);
+        
+        // swap display indexes
+        node.DisplayIndex--;
+        nodeAbove.DisplayIndex++;
+        
+        _context.SaveChanges();
+    }
+    
+    public void MoveDown(int id)
+    {
+        _logger.LogInformation("Move node #{Id} down", id);
+        var node = GetNodeWithTracking(id);
+        var displayIndex = node.DisplayIndex;
+        
+        var siblings = GetSiblingNodes(node.Id);
+        if (displayIndex == siblings.Count - 1)
+        {
+            _logger.LogWarning("Node #{Id} is already at the bottom", id);
+            return;
+        }
+        
+        var nodeBelow = siblings.Single(n => n.DisplayIndex == displayIndex + 1);
+        
+        // swap display indexes
+        node.DisplayIndex++;
+        nodeBelow.DisplayIndex--;
+        
+        _context.SaveChanges();
+    }
 
     public List<Node> GetSiblingNodes(int id)
     {
@@ -90,7 +134,6 @@ public class NodeService
     {
         _logger.LogInformation("Get root nodes");
         return _context.Nodes
-            .AsNoTracking()
             .Where(x => x.ParentId == null).ToList();
     }
     

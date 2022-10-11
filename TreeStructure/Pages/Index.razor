@@ -56,7 +56,9 @@
                       NodeId="@rootNode.Id"
                       OnMove="@OnMoveNode"
                       OnDelete="@OnDelete"
-                      Sort="@_sortType"/>
+                      Sort="@_sortType"
+                      OnMoveDown="@MoveDown"
+                      OnMoveUp="@MoveUp"/>
             </ol>
         </div>
     }
@@ -150,6 +152,24 @@ else
         NodeService.AddNode(new Node { Name = name });
         _showAddRootDialog = false;
         Logger.LogInformation("Hide add root dialog");
+    }
+
+    private void MoveDown(int id)
+    {
+        Logger.LogInformation("Move down node #{NodeId} with display index {DisplayIndex}",
+            id, NodeService.GetNode(id).DisplayIndex);
+        
+        NodeService.MoveDown(id);
+        
+        // TODO: refresh roots, maybe extract new component for tree, and use cascading params
+    }
+
+    private void MoveUp(int id)
+    {
+        Logger.LogInformation("Move up node #{NodeId} with display index {DisplayIndex}",
+            id, NodeService.GetNode(id).DisplayIndex);
+        
+        NodeService.MoveUp(id);
     }
 
 }
