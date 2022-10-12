@@ -5,7 +5,9 @@
     <li style="list-style-type: none">
 
         @* Node card *@
-        <TreeViewItem NodeId="NodeId" OnIsExpandedChanged="@(b => _isExpanded = b)"/>
+        <TreeViewItem NodeId="NodeId"
+                      OnIsExpandedChanged="@(b => _isExpanded = b)"
+                      OnNodeAdded="@StateHasChanged"/>
 
         @* Render children *@
         @if (_isExpanded && NodeService.HasChildren(NodeId))

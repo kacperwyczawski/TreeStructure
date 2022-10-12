@@ -1,0 +1,41 @@
+@using TreeStructure.Services
+@inject NodeService NodeService
+
+<MudDialog>
+    <DialogContent>
+        <MudTextField Label="Enter node name" Variant="Variant.Outlined" @bind-Value="_name" AutoFocus="true"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@MudDialogInstance.Cancel">
+            Cancel
+        </MudButton>
+        <MudButton Color="Color.Success" Variant="Variant.Filled"
+                   OnClick="@AddNode">
+            Add
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter]
+    MudDialogInstance MudDialogInstance { get; set; } = null!;
+
+    [Parameter]
+    [EditorRequired]
+    public int? ParentId { get; set; }
+
+    string? _name;
+
+    private void AddNode()
+    {
+        if (_name is null)
+            return;
+
+        var node = new Node { Name = _name, ParentId = ParentId };
+        NodeService.AddNode(node);
+
+        MudDialogInstance.Close();
+    }
+
+}
