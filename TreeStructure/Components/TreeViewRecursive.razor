@@ -5,10 +5,10 @@
     <li style="list-style-type: none">
 
         @* Node card *@
-        <TreeViewItem NodeId="NodeId" />
+        <TreeViewItem NodeId="NodeId" OnIsExpandedChanged="@(b => _isExpanded = b)"/>
 
         @* Render children *@
-        @if (NodeService.HasChildren(NodeId))
+        @if (_isExpanded && NodeService.HasChildren(NodeId))
         {
             @foreach (var childId in NodeService.GetChildren(NodeId).Select(n => n.Id))
             {
@@ -23,5 +23,7 @@
 
     [Parameter]
     public int NodeId { get; set; }
+    
+    bool _isExpanded;
 
 }
