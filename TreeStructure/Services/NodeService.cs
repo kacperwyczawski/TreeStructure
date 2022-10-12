@@ -116,20 +116,40 @@ public class NodeService
             .Where(x => x.ParentId == id).ToList();
     }
     
-    public Task<List<int>> GetChildrenIdsAsync(int id)
+    public async Task<List<int>> GetChildrenIdsAsync(int id)
     {
         _logger.LogInformation("Get children for node #{Id}", id);
-        return _context.Nodes
+        return await _context.Nodes
             .AsNoTracking()
             .Where(n => n.ParentId == id)
             .Select(n => n.Id)
             .ToListAsync();
     }
     
+    public List<int> GetChildrenIds(int id, Sort sort)
+    {
+        _logger.LogInformation("Get children for node #{Id} sorted by Sort.{Sort}", id, sort);
+
+        var children = _context.Nodes
+            .AsNoTracking()
+            .Where(n => n.ParentId == id);
+        
+        var sortedChildren = sort switch
+        {
+            Sort.Ascending => children.OrderBy(n => n.Name),
+            Sort.Descending => children.OrderByDescending(n => n.Name),
+            Sort.Custom => children.OrderBy(n => n.DisplayIndex),
+            Sort.CustomReversed => children.OrderByDescending(n => n.DisplayIndex),
+            _ => throw new ArgumentOutOfRangeException(nameof(sort), sort, null)
+        };
+        
+        return sortedChildren.Select(n => n.Id).ToList();
+    }
+    
     public List<Node> GetChildren(int id, Sort sort)
     {
-        var children = GetChildren(id);
         _logger.LogInformation("Sort children for node #{Id} by Sort.{Sort}", id, sort);
+        var children = GetChildren(id);
         return sort switch
         {
             Sort.Ascending => children.OrderBy(x => x.Name).ToList(),

@@ -37,7 +37,7 @@
     OnAddRoot="@OnAddRoot"/>
 
 <div class="my-4 p-4 container rounded shadow">
-    <MudSelect @bind-Value="_sortType" Label="Selected sorting:"
+    <MudSelect @bind-Value="_sort" Label="Selected sorting:"
                OpenIcon="@Icons.Material.Filled.Sort" AdornmentColor="Color.Secondary">
         @foreach (NodeService.Sort sort in Enum.GetValues(typeof(NodeService.Sort)))
         {
@@ -49,7 +49,7 @@
 <!-- tree structure -->
 @if (NodeService.GetRootNodes().Any())
 {
-    @foreach (var rootNode in NodeService.GetRootNodes(_sortType))
+    @foreach (var rootNode in NodeService.GetRootNodes(_sort))
     {
         <div class="my-4 p-4 ps-0 container rounded shadow">
             <ol>
@@ -57,7 +57,7 @@
                                NodeId="@rootNode.Id"
                                OnMove="@OnMoveNode"
                                OnDelete="@OnDelete"
-                               Sort="@_sortType"
+                               Sort="@_sort"
                                OnMoveDown="@MoveDown"
                                OnMoveUp="@MoveUp"/>
             </ol>
@@ -76,13 +76,15 @@ else
     </div>
 }
 
-<TreeViewFrame @ref="_treeReference"/>
+<CascadingValue Value="_sort">
+    <TreeViewFrame @ref="_treeReference"/>
+</CascadingValue>
 
 @code {
-    
+
     TreeViewFrame _treeReference = null!;
 
-    NodeService.Sort _sortType;
+    NodeService.Sort _sort;
 
     bool _showDeleteNodeWithChildrenDialog;
 
@@ -178,9 +180,9 @@ else
     async Task OnAddRoot()
     {
         var dialog = DialogService.Show<AddNodeDialog>("Add root node");
-        
+
         var result = await dialog.Result;
-        
+
         if (!result.Cancelled)
         {
             _treeReference.Refresh();
