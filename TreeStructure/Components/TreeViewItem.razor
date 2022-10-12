@@ -6,17 +6,40 @@
         <MudFab Color="Color.Primary" Size="Size.Small" StartIcon="@ExpandCollapseIcon"
                 OnClick="@(() => { _isExpanded = !_isExpanded; OnIsExpandedChanged.InvokeAsync(_isExpanded); })"
                 Disabled="@(!NodeService.HasChildren(NodeId))"/>
-        <MudText Typo="Typo.h6">
-            <strong>@NodeService.GetNode(NodeId).Name</strong>
-        </MudText>
-        <MudText Class="grey-text">
-            #@NodeId
-        </MudText>
+        @if (_isEditing)
+        {
+            <MudTextField Label="Enter new name" Margin="Margin.Dense" Variant="Variant.Outlined"
+                          @bind-Value="_newName" AutoFocus="true"/>
+
+            <MudText Class="grey-text">
+                #@NodeId
+            </MudText>
+
+            <MudFab StartIcon="@Icons.Material.Outlined.Close" Size="Size.Small"
+                    OnClick="@(() => { _isEditing = false; _newName = null; })"/>
+
+            <MudFab StartIcon="@Icons.Material.Outlined.Save" Size="Size.Small" Color="Color.Success"
+                    OnClick="@Rename"/>
+        }
+        else
+        {
+            <MudText Typo="Typo.h6">
+                <strong>@NodeService.GetNode(NodeId).Name</strong>
+            </MudText>
+
+            <MudText Class="grey-text">
+                #@NodeId
+            </MudText>
+        }
     </MudStack>
     <div class="flex-grow-1"></div>
     <MudStack Row="true" AlignItems="AlignItems.Center">
         <MudFab Color="Color.Success" StartIcon="@Icons.Material.Outlined.Add" Size="Size.Small"/>
-        <MudFab StartIcon="@Icons.Material.Outlined.EditNote" Size="Size.Small"/>
+        @if (!_isEditing)
+        {
+            <MudFab StartIcon="@Icons.Material.Outlined.EditNote" Size="Size.Small"
+                    OnClick="@(() => _isEditing = true)"/>
+        }
         <MudFab Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" Size="Size.Small"/>
     </MudStack>
 </MudPaper>
@@ -36,5 +59,19 @@
     string ExpandCollapseIcon => _isExpanded
         ? Icons.Material.Outlined.KeyboardArrowDown
         : Icons.Material.Outlined.KeyboardArrowRight;
+
+    bool _isEditing;
+
+    string? _newName;
+
+    private void Rename()
+    {
+        if (_newName == null)
+            return;
+        
+        NodeService.RenameNode(NodeId, _newName);
+        _newName = null;
+        _isEditing = false;
+    }
 
 }
