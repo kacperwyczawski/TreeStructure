@@ -85,9 +85,10 @@
 
         var dialog = DialogService.Show<AddNodeDialog>("Add child", parameters);
         
-        await dialog.Result;
+        var result = await dialog.Result;
 
-        await OnNodeAdded.InvokeAsync();
+        if (!result.Cancelled)
+            await OnNodeAdded.InvokeAsync();
     }
 
 }
