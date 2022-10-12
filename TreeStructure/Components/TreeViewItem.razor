@@ -1,5 +1,6 @@
 @using TreeStructure.Services
 @inject NodeService NodeService
+@inject IDialogService DialogService
 
 <MudPaper Class="pa-3 ma-3 d-flex">
     <MudStack Row="true" AlignItems="AlignItems.Center">
@@ -34,7 +35,8 @@
     </MudStack>
     <div class="flex-grow-1"></div>
     <MudStack Row="true" AlignItems="AlignItems.Center">
-        <MudFab Color="Color.Success" StartIcon="@Icons.Material.Outlined.Add" Size="Size.Small"/>
+        <MudFab Color="Color.Success" StartIcon="@Icons.Material.Outlined.Add" Size="Size.Small"
+                OnClick="@AddChild"/>
         @if (!_isEditing)
         {
             <MudFab StartIcon="@Icons.Material.Outlined.EditNote" Size="Size.Small"
@@ -53,6 +55,9 @@
 
     [Parameter]
     public EventCallback<bool> OnIsExpandedChanged { get; set; }
+    
+    [Parameter]
+    public EventCallback OnNodeAdded { get; set; }
 
     bool _isExpanded;
 
@@ -72,6 +77,17 @@
         NodeService.RenameNode(NodeId, _newName);
         _newName = null;
         _isEditing = false;
+    }
+    
+    async Task AddChild()
+    {
+        var parameters = new DialogParameters { { "ParentId", NodeId } };
+
+        var dialog = DialogService.Show<AddNodeDialog>("Add child", parameters);
+        
+        await dialog.Result;
+
+        await OnNodeAdded.InvokeAsync();
     }
 
 }
