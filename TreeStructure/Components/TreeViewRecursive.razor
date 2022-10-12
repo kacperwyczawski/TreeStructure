@@ -7,11 +7,11 @@
         {
             @* Node card *@
             <TreeViewItem NodeId="NodeId"
-                          OnIsExpandedChanged="@(b => _isExpanded = b)"
+                          OnIsExpandedChanged="@(b => _displayChild = b)"
                           OnNodesChanged="@(() => { OnNodesChanged.InvokeAsync(); StateHasChanged(); })"/>
 
             @* Render children *@
-            @if (_isExpanded && NodeService.HasChildren(NodeId))
+            @if (_displayChild && NodeService.HasChildren(NodeId))
             {
                 @foreach (var childId in NodeService.GetChildren(NodeId).Select(n => n.Id))
                 {
@@ -30,6 +30,6 @@
     [Parameter]
     public EventCallback OnNodesChanged { get; set; }
 
-    bool _isExpanded;
+    bool _displayChild;
 
 }
