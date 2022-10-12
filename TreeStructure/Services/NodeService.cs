@@ -224,6 +224,8 @@ public class NodeService
 
     public void ChangeParent(int id, int? newParentId)
     {
+        // TODO: Assign new display index
+        
         _logger.LogInformation("Change parent of node #{Id} to #{NewParentId}", id, newParentId);
 
         if (id == newParentId)
