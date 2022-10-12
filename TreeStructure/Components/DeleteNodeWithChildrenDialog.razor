@@ -37,7 +37,7 @@
 
     void OnDelete()
     {
-        NodeService.DeleteNodeRecursively(NodeId);
+        NodeService.DeleteNodeRecursivelyAsync(NodeId);
         OnClose.InvokeAsync();
     }
 

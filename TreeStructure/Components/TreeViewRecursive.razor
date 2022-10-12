@@ -3,21 +3,22 @@
 
 <ol>
     <li style="list-style-type: none">
-
-        @* Node card *@
-        <TreeViewItem NodeId="NodeId"
-                      OnIsExpandedChanged="@(b => _isExpanded = b)"
-                      OnNodeAdded="@StateHasChanged"/>
-
-        @* Render children *@
-        @if (_isExpanded && NodeService.HasChildren(NodeId))
+        @if (NodeService.Exists(NodeId))
         {
-            @foreach (var childId in NodeService.GetChildren(NodeId).Select(n => n.Id))
+            @* Node card *@
+            <TreeViewItem NodeId="NodeId"
+                          OnIsExpandedChanged="@(b => _isExpanded = b)"
+                          OnNodesChanged="@(() => { OnNodesChanged.InvokeAsync(); StateHasChanged(); })"/>
+
+            @* Render children *@
+            @if (_isExpanded && NodeService.HasChildren(NodeId))
             {
-                <TreeViewRecursive NodeId="@childId" />
+                @foreach (var childId in NodeService.GetChildren(NodeId).Select(n => n.Id))
+                {
+                    <TreeViewRecursive NodeId="@childId"/>
+                }
             }
         }
-
     </li>
 </ol>
 
@@ -26,6 +27,9 @@
     [Parameter]
     public int NodeId { get; set; }
     
+    [Parameter]
+    public EventCallback OnNodesChanged { get; set; }
+
     bool _isExpanded;
 
 }
