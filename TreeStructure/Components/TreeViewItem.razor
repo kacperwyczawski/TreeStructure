@@ -3,7 +3,8 @@
 
 <MudPaper Class="pa-3 ma-3 d-flex">
     <MudStack Row="true" AlignItems="AlignItems.Center">
-        <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Outlined.ChevronRight" Size="Size.Small"/>
+        <MudFab Color="Color.Primary" Size="Size.Small"
+                StartIcon="@ExpandCollapseIcon" OnClick="@(() => _isExpanded = !_isExpanded)"/>
         <MudText Typo="Typo.h6">
             <strong>@NodeService.GetNode(NodeId).Name</strong>
         </MudText>
@@ -25,5 +26,11 @@
     [Parameter]
     [EditorRequired]
     public int NodeId { get; set; }
+
+    bool _isExpanded;
+
+    string ExpandCollapseIcon => _isExpanded
+        ? Icons.Material.Outlined.KeyboardArrowDown
+        : Icons.Material.Outlined.KeyboardArrowRight;
 
 }
