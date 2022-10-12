@@ -1,6 +1,7 @@
 @using TreeStructure.Services
 @inject NodeService NodeService
 @inject IDialogService DialogService
+@inject ILogger<TreeViewItem> Logger
 
 <MudPaper Class="pa-3 ma-3 d-flex">
     <MudStack Row="true" AlignItems="AlignItems.Center">
@@ -35,6 +36,19 @@
     </MudStack>
     <div class="flex-grow-1"></div>
     <MudStack Row="true" AlignItems="AlignItems.Center">
+        @if (Sort is NodeService.Sort.Custom or NodeService.Sort.CustomReversed)
+        {
+            @if (CanMoveUp)
+            {
+                <MudFab StartIcon="@Icons.Material.Outlined.MoveUp" Size="Size.Small"
+                        OnClick="@MoveUp"/>
+            }
+            if (CanMoveDown)
+            {
+                <MudFab StartIcon="@Icons.Material.Outlined.MoveDown" Size="Size.Small"
+                        OnClick="@MoveDown"/>
+            }
+        }
         <MudFab Color="Color.Success" StartIcon="@Icons.Material.Outlined.Add" Size="Size.Small"
                 OnClick="@AddChildAsync"/>
         @if (!_isEditing)
@@ -59,18 +73,27 @@
 
     [Parameter]
     public EventCallback OnNodesChanged { get; set; }
+    
+    [CascadingParameter]
+    public NodeService.Sort Sort { get; set; }
+    
+    bool CanMoveUp => NodeService.GetNode(NodeId).DisplayIndex > 0;
+    
+    bool CanMoveDown => NodeService.GetNode(NodeId).DisplayIndex < NodeService.GetSiblingNodes(NodeId).Count - 1;
 
     bool _isExpanded;
 
-    string ExpandCollapseIcon => _isExpanded
-        ? Icons.Material.Outlined.KeyboardArrowDown
-        : Icons.Material.Outlined.KeyboardArrowRight;
+    string ExpandCollapseIcon => NodeService.HasChildren(NodeId)
+        ? _isExpanded
+            ? Icons.Material.Outlined.KeyboardArrowDown // if has children and is expanded
+            : Icons.Material.Outlined.KeyboardArrowRight // if has children and is collapsed
+        : Icons.Material.Outlined.KeyboardArrowRight; // if has no children
 
     bool _isEditing;
 
     string? _newName;
 
-    private void Rename()
+    void Rename()
     {
         if (_newName == null)
             return;
@@ -115,6 +138,20 @@
     protected override bool ShouldRender()
     {
         return base.ShouldRender() && NodeService.Exists(NodeId);
+    }
+
+    private void MoveUp()
+    {
+        Logger.LogInformation("Moving node {NodeId} up", NodeId);
+        NodeService.MoveUp(NodeId);
+        OnNodesChanged.InvokeAsync();
+    }
+
+    private void MoveDown()
+    {
+        Logger.LogInformation("Moving node {NodeId} down", NodeId);
+        NodeService.MoveDown(NodeId);
+        OnNodesChanged.InvokeAsync();
     }
 
 }

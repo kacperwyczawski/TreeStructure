@@ -8,14 +8,14 @@
             @* Node card *@
             <TreeViewItem NodeId="NodeId"
                           OnIsExpandedChanged="@(b => _displayChild = b)"
-                          OnNodesChanged="@(() => { OnNodesChanged.InvokeAsync(); StateHasChanged(); })"/>
+                          OnNodesChanged="@RefreshAll"/>
 
             @* Render children *@
             @if (_displayChild && NodeService.HasChildren(NodeId))
             {
                 @foreach (var childId in NodeService.GetChildrenIds(NodeId, Sort))
                 {
-                    <TreeViewRecursive NodeId="@childId"/>
+                    <TreeViewRecursive NodeId="@childId" PreviousIteration="this"/>
                 }
             }
         }
@@ -30,9 +30,24 @@
     [Parameter]
     public EventCallback OnNodesChanged { get; set; }
     
+    [Parameter]
+    public TreeViewRecursive? PreviousIteration { get; set; }
+    
     [CascadingParameter]
     public NodeService.Sort Sort { get; set; }
+    
+    public void Refresh()
+    {
+        StateHasChanged();
+    }
 
     bool _displayChild;
+
+    private void RefreshAll()
+    {
+        OnNodesChanged.InvokeAsync();
+        StateHasChanged();
+        PreviousIteration?.Refresh();
+    }
 
 }
