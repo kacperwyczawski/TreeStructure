@@ -13,7 +13,7 @@
             @* Render children *@
             @if (_displayChild && NodeService.HasChildren(NodeId))
             {
-                @foreach (var childId in NodeService.GetChildren(NodeId).Select(n => n.Id))
+                @foreach (var childId in NodeService.GetChildrenIds(NodeId, Sort))
                 {
                     <TreeViewRecursive NodeId="@childId"/>
                 }
@@ -29,6 +29,9 @@
     
     [Parameter]
     public EventCallback OnNodesChanged { get; set; }
+    
+    [CascadingParameter]
+    public NodeService.Sort Sort { get; set; }
 
     bool _displayChild;
 
