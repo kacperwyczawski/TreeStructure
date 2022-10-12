@@ -36,13 +36,14 @@
     <div class="flex-grow-1"></div>
     <MudStack Row="true" AlignItems="AlignItems.Center">
         <MudFab Color="Color.Success" StartIcon="@Icons.Material.Outlined.Add" Size="Size.Small"
-                OnClick="@AddChild"/>
+                OnClick="@AddChildAsync"/>
         @if (!_isEditing)
         {
             <MudFab StartIcon="@Icons.Material.Outlined.EditNote" Size="Size.Small"
                     OnClick="@(() => _isEditing = true)"/>
         }
-        <MudFab Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" Size="Size.Small"/>
+        <MudFab Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" Size="Size.Small"
+                OnClick="@DeleteNodeAsync"/>
     </MudStack>
 </MudPaper>
 
@@ -57,7 +58,7 @@
     public EventCallback<bool> OnIsExpandedChanged { get; set; }
     
     [Parameter]
-    public EventCallback OnNodeAdded { get; set; }
+    public EventCallback OnNodesChanged { get; set; }
 
     bool _isExpanded;
 
@@ -79,7 +80,7 @@
         _isEditing = false;
     }
     
-    async Task AddChild()
+    async Task AddChildAsync()
     {
         var parameters = new DialogParameters { { "ParentId", NodeId } };
 
@@ -88,7 +89,18 @@
         var result = await dialog.Result;
 
         if (!result.Cancelled)
-            await OnNodeAdded.InvokeAsync();
+            await OnNodesChanged.InvokeAsync();
+    }
+    
+    async Task DeleteNodeAsync()
+    {
+        await NodeService.DeleteNodeRecursivelyAsync(NodeId);
+        await OnNodesChanged.InvokeAsync();
+    }
+
+    protected override bool ShouldRender()
+    {
+        return base.ShouldRender() && NodeService.Exists(NodeId);
     }
 
 }

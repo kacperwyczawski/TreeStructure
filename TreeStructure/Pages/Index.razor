@@ -110,7 +110,7 @@ else
         }
         else
         {
-            NodeService.DeleteNodeRecursively(id);
+            NodeService.DeleteNodeRecursivelyAsync(id);
             StateHasChanged();
         }
     }

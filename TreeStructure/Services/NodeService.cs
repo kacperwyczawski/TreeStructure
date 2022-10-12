@@ -116,6 +116,16 @@ public class NodeService
             .Where(x => x.ParentId == id).ToList();
     }
     
+    public Task<List<int>> GetChildrenIdsAsync(int id)
+    {
+        _logger.LogInformation("Get children for node #{Id}", id);
+        return _context.Nodes
+            .AsNoTracking()
+            .Where(n => n.ParentId == id)
+            .Select(n => n.Id)
+            .ToListAsync();
+    }
+    
     public List<Node> GetChildren(int id, Sort sort)
     {
         var children = GetChildren(id);
@@ -214,23 +224,29 @@ public class NodeService
         _context.SaveChanges();
     }
 
-    public void DeleteNodeRecursively(int id)
+    public async Task DeleteNodeRecursivelyAsync(int id)
     {
         _logger.LogInformation("Delete node #{Id} with children", id);
 
-        var node = GetNodeWithTracking(id);
+        var node = await _context.Nodes.FindAsync(id);
+        
+        if (node is null)
+        {
+            _logger.LogWarning("Node #{Id} not found", id);
+            return;
+        }
 
         _context.Nodes.Remove(node);
 
-        if (GetChildren(node.Id) is var children && children.Any())
+        if (await GetChildrenIdsAsync(node.Id) is var children && children.Any())
         {
-            foreach (var child in children)
+            foreach (var childId in children)
             {
-                DeleteNodeRecursively(child.Id);
+                await DeleteNodeRecursivelyAsync(childId);
             }
         }
 
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
     public void DeleteAllNodes()

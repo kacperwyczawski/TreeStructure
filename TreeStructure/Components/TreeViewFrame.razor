@@ -3,10 +3,10 @@
 
 @if (NodeService.GetRootNodes(Sort).Any())
 {
-    foreach (var rootNodeId in NodeService.GetRootNodes(Sort).Select(n => n.Id))
+    foreach (var rootNodeId in SortedRootIds)
     {
         <MudPaper Class="py-4 pr-5 my-5 mx-auto" MaxWidth="1200px">
-            <TreeViewRecursive NodeId="@rootNodeId"/>
+            <TreeViewRecursive NodeId="@rootNodeId" OnNodesChanged="@Refresh"/>
         </MudPaper>
     }
 }
@@ -26,7 +26,9 @@ else
 
     [CascadingParameter]
     public NodeService.Sort Sort { get; set; }
-    
+
+    IEnumerable<int> SortedRootIds => NodeService.GetRootNodes(Sort).Select(n => n.Id);
+
     public void Refresh()
     {
         StateHasChanged();
