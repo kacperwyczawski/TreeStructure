@@ -3,6 +3,7 @@
 
 @inject NodeService NodeService
 @inject ILogger<Index> Logger
+@inject IDialogService DialogService
 
 @if (_showDeleteNodeWithChildrenDialog && _currentNodeId is not null)
 {
@@ -33,7 +34,7 @@
     OnSampleData="@(() => { NodeService.DeleteAllNodes(); NodeService.Seed(); _treeReference.Refresh(); })"
     OnExpandAll="@(() => OnExpandAll(_treeRecursiveReference))"
     OnCollapseAll="@(() => OnCollapseAll(_treeRecursiveReference))"
-    OnAddRoot="@(() => { _showAddRootDialog = true; Logger.LogInformation("Show add root dialog"); })"/>
+    OnAddRoot="@OnAddRoot"/>
 
 <div class="my-4 p-4 container rounded shadow">
     <MudSelect @bind-Value="_sortType" Label="Selected sorting:"
@@ -172,6 +173,18 @@ else
             id, NodeService.GetNode(id).DisplayIndex);
 
         NodeService.MoveUp(id);
+    }
+
+    async Task OnAddRoot()
+    {
+        var dialog = DialogService.Show<AddNodeDialog>("Add root node");
+        
+        var result = await dialog.Result;
+        
+        if (!result.Cancelled)
+        {
+            _treeReference.Refresh();
+        }
     }
 
 }
