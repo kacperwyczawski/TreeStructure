@@ -61,7 +61,7 @@
                     OnClick="@(() => { _isMoving = false; _newParent = null; })"/>
             
             <MudFab StartIcon="@Icons.Material.Outlined.Save" Size="Size.Small" Color="Color.Success"
-                    />
+                    OnClick="@MoveNode"/>
         }
         else
         {

@@ -18,7 +18,8 @@ public partial class TreeViewItem : ComponentBase
 
     private bool CanMoveUp => NodeServiceInjected.GetNode(NodeId).DisplayIndex > 0;
 
-    private bool CanMoveDown => NodeServiceInjected.GetNode(NodeId).DisplayIndex < NodeServiceInjected.GetSiblingNodes(NodeId).Count - 1;
+    private bool CanMoveDown => NodeServiceInjected.GetNode(NodeId).DisplayIndex <
+                                NodeServiceInjected.GetSiblingNodes(NodeId).Count - 1;
 
     private bool _isExpanded;
 
@@ -29,11 +30,11 @@ public partial class TreeViewItem : ComponentBase
         : Icons.Material.Outlined.KeyboardArrowRight; // if has no children
 
     private bool _isEditing;
-    
+
     private bool _isMoving;
 
     private string? _newName;
-    
+
     private Node? _newParent;
 
     private void Rename()
@@ -96,15 +97,30 @@ public partial class TreeViewItem : ComponentBase
         NodeServiceInjected.MoveDown(NodeId);
         OnNodesChanged.InvokeAsync();
     }
-    
+
     private async Task<IEnumerable<Node>> SearchNodes(string searchText)
     {
         if (string.IsNullOrWhiteSpace(searchText))
             return NodeServiceInjected.GetAllNodes();
-        
+
         return NodeServiceInjected
             .GetAllNodes()
             .Where(n => n.Name
                 .Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    private void MoveNode()
+    {
+        if (_newParent == null)
+            return;
+
+        NodeServiceInjected.MoveToAnotherParent(NodeId, _newParent.Id);
+        
+        // reset fields
+        _newParent = null;
+        _isMoving = false;
+        
+        // refresh the tree
+        OnNodesChanged.InvokeAsync();
     }
 }
