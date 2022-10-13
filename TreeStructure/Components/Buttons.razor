@@ -1,7 +1,7 @@
 @using TreeStructure.Services
 @inject NodeService NodeService
 
-<div class="my-4 p-4 container rounded shadow">
+<MudPaper Class="pa-5 my-5 mx-auto" MaxWidth="1200px">
     <MudButton Variant="Variant.Filled" StartIcon="@Icons.Outlined.Workspaces"
                Class="ma-2" Color="Color.Primary" OnClick="OnSampleData">
         Sample data
@@ -22,7 +22,7 @@
                Class="ma-2" Color="Color.Success" OnClick="OnAddRoot">
         Add root
     </MudButton>
-</div>
+</MudPaper>
 
 @code {
 
