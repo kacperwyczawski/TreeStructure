@@ -222,7 +222,7 @@ public class NodeService
         _context.SaveChanges();
     }
 
-    public void MoveToAnotherParent(int id, int? newParentId)
+    public Result MoveToAnotherParent(int id, int? newParentId)
     {
         if (newParentId is null)
             _logger.LogInformation("Move node #{Id} to root", id);
@@ -232,7 +232,7 @@ public class NodeService
         if (id == newParentId)
         {
             _logger.LogWarning("Cannot move to itself");
-            return;
+            return new Result(false, "Cannot move to itself");
         }
         
         var node = GetNodeWithTracking(id);
@@ -240,7 +240,7 @@ public class NodeService
         if (node.ParentId == newParentId)
         {
             _logger.LogInformation("New parent id is the same as the current one");
-            return;
+            return new Result(false, "New parent id is the same as the current one");
         }
         
         // prevent moving to descendants
@@ -257,7 +257,7 @@ public class NodeService
                 {
                     _logger.LogWarning("Cannot move node #{Id} to its own descendant #{NewParentId}",
                         id, newParentId);
-                    return;
+                    return new Result(false, $"Cannot move node #{id} to its own descendant #{newParentId}");
                 }
                 stack.Push(childId);
             }
@@ -266,6 +266,8 @@ public class NodeService
         node.ParentId = newParentId;
 
         _context.SaveChanges();
+        
+        return new Result(true, $"Successfully moved node #{id} to parent #{newParentId}");
     }
 
     public async Task DeleteNodeRecursivelyAsync(int id)
@@ -365,5 +367,17 @@ public class NodeService
         return _context.Nodes
             .AsNoTracking()
             .Single(n => n.Id == id).Name;
+    }
+    
+    public class Result
+    {
+        public Result(bool isSuccess, string message)
+        {
+            IsSuccess = isSuccess;
+            Message = message;
+        }
+
+        public bool IsSuccess { get; set; }
+        public string Message { get; set; }
     }
 }
