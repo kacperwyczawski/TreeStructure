@@ -243,20 +243,7 @@ public class NodeService
             return;
         }
         
-        // move node with all children to another parent
-        // using loop and stack instead of recursion
-        var stack = new Stack<Node>();
-        stack.Push(node);
-        while (stack.Count > 0)
-        {
-            var currentNode = stack.Pop();
-            currentNode.ParentId = newParentId;
-            var children = _context.Nodes.Where(n => n.ParentId == currentNode.Id);
-            foreach (var child in children)
-            {
-                stack.Push(child);
-            }
-        }
+        node.ParentId = newParentId;
 
         _context.SaveChanges();
     }
