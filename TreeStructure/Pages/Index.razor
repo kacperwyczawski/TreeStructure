@@ -5,35 +5,9 @@
 @inject ILogger<Index> Logger
 @inject IDialogService DialogService
 
-@if (_showDeleteNodeWithChildrenDialog && _currentNodeId is not null)
-{
-    <DeleteNodeWithChildrenDialog NodeId="@((int)_currentNodeId)"
-                                  OnClose="@OnDeleteNodeDialogClose"/>
-}
-
-@if (_showMoveNodeDialog && _currentNodeId is not null)
-{
-    <MoveNodeDialog NodeId="@((int)_currentNodeId)"
-                    OnClose="@OnMoveNodeDialogClose"/>
-}
-
-@if (_showAddRootDialog)
-{
-    <TextFormDialog ConfirmButtonText="Add"
-                    LabelText="Enter name for root node"
-                    OnCancel="@(() => { _showAddRootDialog = false; Logger.LogInformation("Hide add root dialog"); })"
-                    OnConfirm="@OnAddRoot">
-        <Title>
-            Add root node
-        </Title>
-    </TextFormDialog>
-}
-
 <Buttons
     OnDeleteAll="@(() => { NodeService.DeleteAllNodes(); _treeReference.Refresh(); })"
     OnSampleData="@(() => { NodeService.DeleteAllNodes(); NodeService.Seed(); _treeReference.Refresh(); })"
-    OnExpandAll="@(() => OnExpandAll(_treeRecursiveReference))"
-    OnCollapseAll="@(() => OnCollapseAll(_treeRecursiveReference))"
     OnAddRoot="@OnAddRoot"/>
 
 <div class="my-4 p-4 container rounded shadow">
@@ -46,36 +20,6 @@
     </MudSelect>
 </div>
 
-<!-- tree structure -->
-@if (NodeService.GetRootNodes().Any())
-{
-    @foreach (var rootNode in NodeService.GetRootNodes(_sort))
-    {
-        <div class="my-4 p-4 ps-0 container rounded shadow">
-            <ol>
-                <TreeRecursive @ref="@_treeRecursiveReference"
-                               NodeId="@rootNode.Id"
-                               OnMove="@OnMoveNode"
-                               OnDelete="@OnDelete"
-                               Sort="@_sort"
-                               OnMoveDown="@MoveDown"
-                               OnMoveUp="@MoveUp"/>
-            </ol>
-        </div>
-    }
-}
-else
-{
-    <div class="my-4 p-4 container rounded shadow d-flex justify-content-center">
-        <div class="p-2">
-            <img src="img/info.svg" alt="info"/>
-        </div>
-        <div class="p-2">
-            <p>Add some nodes to see the tree structure (or click Sample Data button to fill database)</p>
-        </div>
-    </div>
-}
-
 <CascadingValue Value="_sort">
     <TreeViewFrame @ref="_treeReference"/>
 </CascadingValue>
@@ -85,97 +29,6 @@ else
     TreeViewFrame _treeReference = null!;
 
     NodeService.Sort _sort;
-
-    bool _showDeleteNodeWithChildrenDialog;
-
-    bool _showMoveNodeDialog;
-
-    bool _showAddRootDialog;
-
-    int? _currentNodeId;
-
-    TreeRecursive _treeRecursiveReference;
-
-    void OnMoveNode(int id)
-    {
-        _showMoveNodeDialog = true;
-        Logger.LogInformation("Show move node dialog");
-        _currentNodeId = id;
-    }
-
-    void OnDelete(int id)
-    {
-        if (NodeService.HasChildren(id))
-        {
-            _showDeleteNodeWithChildrenDialog = true;
-            Logger.LogInformation("Show delete node with children dialog");
-            _currentNodeId = id;
-        }
-        else
-        {
-            NodeService.DeleteNodeRecursivelyAsync(id);
-            StateHasChanged();
-        }
-    }
-
-    private void OnDeleteNodeDialogClose()
-    {
-        _showDeleteNodeWithChildrenDialog = false;
-        _currentNodeId = null;
-        Logger.LogInformation("Hide delete node dialog");
-    }
-
-    private void OnMoveNodeDialogClose()
-    {
-        _showMoveNodeDialog = false;
-        _currentNodeId = null;
-        Logger.LogInformation("Hide move node dialog");
-    }
-
-    private void OnCollapseAll(TreeRecursive? tree)
-    {
-    // not working
-        if (tree == null)
-            return;
-
-        tree.IsCollapsed = false;
-        StateHasChanged();
-        OnExpandAll(tree.ChildReference);
-    }
-
-    private void OnExpandAll(TreeRecursive? tree)
-    {
-    // not working
-        if (tree == null)
-            return;
-
-        tree.IsCollapsed = false;
-        StateHasChanged();
-        OnExpandAll(tree.ChildReference);
-    }
-
-    private void OnAddRoot(string name)
-    {
-        NodeService.AddNode(new Node { Name = name });
-        _showAddRootDialog = false;
-        Logger.LogInformation("Hide add root dialog");
-    }
-
-    private void MoveDown(int id)
-    {
-        Logger.LogInformation("Move down node #{NodeId} with display index {DisplayIndex}",
-            id, NodeService.GetNode(id).DisplayIndex);
-
-        NodeService.MoveDown(id);
-    }
-
-    private void MoveUp(int id)
-    {
-        Logger.LogInformation("Move up node #{NodeId} with display index {DisplayIndex}",
-            id, NodeService.GetNode(id).DisplayIndex);
-
-        NodeService.MoveUp(id);
-    }
 
     async Task OnAddRoot()
     {
