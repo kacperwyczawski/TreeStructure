@@ -243,6 +243,26 @@ public class NodeService
             return;
         }
         
+        // prevent moving to descendants
+        // using stack and loop instead of recursion
+        var stack = new Stack<int>();
+        stack.Push(id);
+        while (stack.Count > 0)
+        {
+            var nodeId = stack.Pop();
+            var children = GetChildrenIds(nodeId, Sort.Custom);
+            foreach (var childId in children)
+            {
+                if (childId == newParentId)
+                {
+                    _logger.LogWarning("Cannot move node #{Id} to its own descendant #{NewParentId}",
+                        id, newParentId);
+                    return;
+                }
+                stack.Push(childId);
+            }
+        }
+
         node.ParentId = newParentId;
 
         _context.SaveChanges();
