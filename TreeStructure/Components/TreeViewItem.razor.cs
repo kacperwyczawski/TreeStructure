@@ -8,6 +8,9 @@ namespace TreeStructure.Components;
 public partial class TreeViewItem : ComponentBase
 {
     [Inject] private NodeService NodeServiceInjected { get; set; } = default!;
+    
+    [Inject] private ISnackbar Snackbar { get; set; } = default!;
+    
     [Parameter] [EditorRequired] public int NodeId { get; set; }
 
     [Parameter] public EventCallback<bool> OnIsExpandedChanged { get; set; }
@@ -114,13 +117,17 @@ public partial class TreeViewItem : ComponentBase
         if (_newParent == null)
             return;
 
-        NodeServiceInjected.MoveToAnotherParent(NodeId, _newParent.Id);
+        var result = NodeServiceInjected.MoveToAnotherParent(NodeId, _newParent.Id);
         
         // reset fields
         _newParent = null;
         _isMoving = false;
         
+        // notify user
+        Snackbar.Add(result.Message, result.IsSuccess ? Severity.Success : Severity.Error);
+
         // refresh the tree
-        OnNodesChanged.InvokeAsync();
+        if (result.IsSuccess)
+            OnNodesChanged.InvokeAsync();
     }
 }
