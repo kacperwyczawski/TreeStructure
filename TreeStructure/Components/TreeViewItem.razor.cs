@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using TreeStructure.Models;
 using TreeStructure.Services;
 
 namespace TreeStructure.Components;
@@ -32,6 +33,8 @@ public partial class TreeViewItem : ComponentBase
     private bool _isMoving;
 
     private string? _newName;
+    
+    private Node? _newParent;
 
     private void Rename()
     {
@@ -92,5 +95,16 @@ public partial class TreeViewItem : ComponentBase
         Logger.LogInformation("Moving node {NodeId} down", NodeId);
         NodeServiceInjected.MoveDown(NodeId);
         OnNodesChanged.InvokeAsync();
+    }
+    
+    private async Task<IEnumerable<Node>> SearchNodes(string searchText)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+            return NodeServiceInjected.GetAllNodes();
+        
+        return NodeServiceInjected
+            .GetAllNodes()
+            .Where(n => n.Name
+                .Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
     }
 }

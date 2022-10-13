@@ -53,10 +53,17 @@
                 OnClick="@AddChildAsync"/>
         @if (_isMoving)
         {
+            <MudAutocomplete T="Node" Label="Select new parent" Margin="Margin.Dense"
+                             Variant="Variant.Outlined" @bind-Value="_newParent"
+                             SearchFunc="@SearchNodes" ToStringFunc="@(n => $"{n.Name} #{n.Id}")"/>
+            
             <MudFab StartIcon="@Icons.Material.Outlined.Close" Size="Size.Small"
-                    OnClick="@(() => _isMoving = false)"/>
+                    OnClick="@(() => { _isMoving = false; _newParent = null; })"/>
+            
+            <MudFab StartIcon="@Icons.Material.Outlined.Save" Size="Size.Small" Color="Color.Success"
+                    />
         }
-        @if (!_isMoving)
+        else
         {
             <MudFab StartIcon="@Icons.Material.Outlined.ForkLeft" Size="Size.Small"
                     OnClick="@(() => _isMoving = true)"/>
