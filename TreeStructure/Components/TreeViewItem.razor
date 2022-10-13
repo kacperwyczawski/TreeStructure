@@ -54,7 +54,7 @@
         @if (_isMoving)
         {
             <MudAutocomplete T="Node" Label="Select new parent" Margin="Margin.Dense"
-                             Variant="Variant.Outlined" @bind-Value="_newParent"
+                             Variant="Variant.Outlined" @bind-Value="_newParent" AutoFocus="true"
                              SearchFunc="@SearchNodes" ToStringFunc="@(n => $"{n.Name} #{n.Id}")"/>
             
             <MudFab StartIcon="@Icons.Material.Outlined.Close" Size="Size.Small"
