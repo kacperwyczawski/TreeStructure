@@ -222,27 +222,42 @@ public class NodeService
         _context.SaveChanges();
     }
 
-    public void ChangeParent(int id, int? newParentId)
+    public void MoveToAnotherParent(int id, int? newParentId)
     {
-        // TODO: make new method: MoveToAnotherParent, with assigning new display index and moving all children
+        if (newParentId is null)
+            _logger.LogInformation("Move node #{Id} to root", id);
+        else
+            _logger.LogInformation("Move node #{Id} to parent #{NewParentId}", id, newParentId);
         
-        _logger.LogInformation("Change parent of node #{Id} to #{NewParentId}", id, newParentId);
-
         if (id == newParentId)
         {
-            _logger.LogWarning("Cannot change parent to itself");
+            _logger.LogWarning("Cannot move to itself");
             return;
         }
-
+        
         var node = GetNodeWithTracking(id);
-
+        
         if (node.ParentId == newParentId)
         {
             _logger.LogInformation("New parent id is the same as the current one");
             return;
         }
+        
+        // move node with all children to another parent
+        // using loop and stack instead of recursion
+        var stack = new Stack<Node>();
+        stack.Push(node);
+        while (stack.Count > 0)
+        {
+            var currentNode = stack.Pop();
+            currentNode.ParentId = newParentId;
+            var children = _context.Nodes.Where(n => n.ParentId == currentNode.Id);
+            foreach (var child in children)
+            {
+                stack.Push(child);
+            }
+        }
 
-        node.ParentId = newParentId;
         _context.SaveChanges();
     }
 
