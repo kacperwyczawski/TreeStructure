@@ -2,7 +2,6 @@
 @using TreeStructure.Services
 
 @inject NodeService NodeService
-@inject ILogger<Index> Logger
 @inject IDialogService DialogService
 
 <Buttons
@@ -10,7 +9,7 @@
     OnSampleData="@(() => { NodeService.DeleteAllNodes(); NodeService.Seed(); _treeReference.Refresh(); })"
     OnAddRoot="@OnAddRoot"/>
 
-<div class="my-4 p-4 container rounded shadow">
+<MudPaper Class="pa-5 my-5 mx-auto" MaxWidth="1200px">
     <MudSelect @bind-Value="_sort" Label="Selected sorting:"
                OpenIcon="@Icons.Material.Filled.Sort" AdornmentColor="Color.Secondary">
         @foreach (NodeService.Sort sort in Enum.GetValues(typeof(NodeService.Sort)))
@@ -18,7 +17,7 @@
             <MudSelectItem Value="@sort">@sort</MudSelectItem>
         }
     </MudSelect>
-</div>
+</MudPaper>
 
 <CascadingValue Value="_sort">
     <TreeViewFrame @ref="_treeReference"/>
