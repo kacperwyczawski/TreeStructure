@@ -51,6 +51,16 @@
         }
         <MudFab Color="Color.Success" StartIcon="@Icons.Material.Outlined.Add" Size="Size.Small"
                 OnClick="@AddChildAsync"/>
+        @if (_isMoving)
+        {
+            <MudFab StartIcon="@Icons.Material.Outlined.Close" Size="Size.Small"
+                    OnClick="@(() => _isMoving = false)"/>
+        }
+        @if (!_isMoving)
+        {
+            <MudFab StartIcon="@Icons.Material.Outlined.ForkLeft" Size="Size.Small"
+                    OnClick="@(() => _isMoving = true)"/>
+        }
         @if (!_isEditing)
         {
             <MudFab StartIcon="@Icons.Material.Outlined.EditNote" Size="Size.Small"
@@ -60,98 +70,3 @@
                 OnClick="@DeleteNodeAsync"/>
     </MudStack>
 </MudPaper>
-
-
-@code {
-
-    [Parameter]
-    [EditorRequired]
-    public int NodeId { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> OnIsExpandedChanged { get; set; }
-
-    [Parameter]
-    public EventCallback OnNodesChanged { get; set; }
-    
-    [CascadingParameter]
-    public NodeService.Sort Sort { get; set; }
-    
-    bool CanMoveUp => NodeService.GetNode(NodeId).DisplayIndex > 0;
-    
-    bool CanMoveDown => NodeService.GetNode(NodeId).DisplayIndex < NodeService.GetSiblingNodes(NodeId).Count - 1;
-
-    bool _isExpanded;
-
-    string ExpandCollapseIcon => NodeService.HasChildren(NodeId)
-        ? _isExpanded
-            ? Icons.Material.Outlined.KeyboardArrowDown // if has children and is expanded
-            : Icons.Material.Outlined.KeyboardArrowRight // if has children and is collapsed
-        : Icons.Material.Outlined.KeyboardArrowRight; // if has no children
-
-    bool _isEditing;
-
-    string? _newName;
-
-    void Rename()
-    {
-        if (_newName == null)
-            return;
-
-        NodeService.RenameNode(NodeId, _newName);
-        _newName = null;
-        _isEditing = false;
-    }
-
-    async Task AddChildAsync()
-    {
-        var parameters = new DialogParameters { { "ParentId", NodeId } };
-
-        var dialog = DialogService.Show<AddNodeDialog>("Add child", parameters);
-
-        var result = await dialog.Result;
-
-        if (!result.Cancelled)
-            await OnNodesChanged.InvokeAsync();
-    }
-
-    async Task DeleteNodeAsync()
-    {
-        // if the node has children, ask for confirmation
-        if (NodeService.HasChildren(NodeId))
-        {
-            var result = await DialogService.ShowMessageBox("Delete node",
-                "This node has children. Are you sure you want to delete it?",
-                yesText: "Delete", cancelText: "Cancel");
-
-            // if the user clicked cancel, return
-            if (result is null)
-                return;
-        }
-
-        // if user didn't cancel or the node has no children, delete the node
-        await NodeService.DeleteNodeRecursivelyAsync(NodeId);
-
-        await OnNodesChanged.InvokeAsync();
-    }
-
-    protected override bool ShouldRender()
-    {
-        return base.ShouldRender() && NodeService.Exists(NodeId);
-    }
-
-    private void MoveUp()
-    {
-        Logger.LogInformation("Moving node {NodeId} up", NodeId);
-        NodeService.MoveUp(NodeId);
-        OnNodesChanged.InvokeAsync();
-    }
-
-    private void MoveDown()
-    {
-        Logger.LogInformation("Moving node {NodeId} down", NodeId);
-        NodeService.MoveDown(NodeId);
-        OnNodesChanged.InvokeAsync();
-    }
-
-}
