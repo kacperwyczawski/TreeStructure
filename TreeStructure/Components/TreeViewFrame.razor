@@ -5,14 +5,14 @@
 {
     foreach (var rootNodeId in SortedRootIds)
     {
-        <MudPaper Class="py-4 pr-5 my-5 mx-auto" MaxWidth="1200px">
+        <MudPaper Class="py-4 pr-5 my-5 mx-auto">
             <TreeViewRecursive NodeId="@rootNodeId" OnNodesChanged="@Refresh"/>
         </MudPaper>
     }
 }
 else
 {
-    <MudPaper Class="pa-5 my-5 mx-auto" MaxWidth="1200px">
+    <MudPaper Class="pa-5 my-5 mx-auto">
         <MudStack Row="true">
             <MudIcon Icon="@Icons.Outlined.Info"/>
             <MudText Typo="Typo.body1">

@@ -9,7 +9,7 @@
     OnSampleData="@(() => { NodeService.DeleteAllNodes(); NodeService.Seed(); _treeReference.Refresh(); })"
     OnAddRoot="@OnAddRoot"/>
 
-<MudPaper Class="pa-5 my-5 mx-auto" MaxWidth="1200px">
+<MudPaper Class="pa-5 my-5 mx-auto">
     <MudSelect @bind-Value="_sort" Label="Selected sorting:"
                OpenIcon="@Icons.Material.Filled.Sort" AdornmentColor="Color.Secondary">
         @foreach (NodeService.Sort sort in Enum.GetValues(typeof(NodeService.Sort)))
