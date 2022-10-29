@@ -15,6 +15,12 @@
 
 ### How it looks:
 
+------
+
 ![Renaming](/Screenshots/renaming.png)
 
+------
+
 ![Relocating](/Screenshots/relocating.png)
+
+------
