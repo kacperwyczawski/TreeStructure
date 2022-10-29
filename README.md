@@ -15,6 +15,6 @@
 
 ### How it looks:
 
-![Renaming](/Screenshots/Renaming.png)
+![Renaming](/Screenshots/renaming.png)
 
-![Relocating](/Screenshots/Relocating.png)
+![Relocating](/Screenshots/relocating.png)
