@@ -12,3 +12,15 @@
 3. `dotnet ef database update`
 4. `dotnet run`
 5. open `http://localhost:5162` or `https://localhost:7247` in your browser
+
+### How it looks:
+
+------
+
+![Renaming](/Screenshots/renaming.png)
+
+------
+
+![Relocating](/Screenshots/relocating.png)
+
+------
