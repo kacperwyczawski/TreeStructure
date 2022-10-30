@@ -1,41 +1,42 @@
 @using TreeStructure.Services
 @inject NodeService NodeService
 
-<ol class="pl-5">
-    <li style="list-style-type: none">
-        @if (NodeService.Exists(NodeId))
-        {
+<div class="@("ml-" + Margin)">
+    @if (NodeService.Exists(NodeId))
+    {
             @* Node card *@
-            <TreeViewItem NodeId="NodeId"
-                          OnIsExpandedChanged="@(b => _displayChild = b)"
-                          OnNodesChanged="@RefreshAll"/>
+        <TreeViewItem NodeId="NodeId"
+                      OnIsExpandedChanged="@(b => _displayChild = b)"
+                      OnNodesChanged="@RefreshAll"/>
 
             @* Render children *@
-            @if (_displayChild && NodeService.HasChildren(NodeId))
+        @if (_displayChild && NodeService.HasChildren(NodeId))
+        {
+            @foreach (var childId in NodeService.GetChildrenIds(NodeId, Sort))
             {
-                @foreach (var childId in NodeService.GetChildrenIds(NodeId, Sort))
-                {
-                    <TreeViewRecursive NodeId="@childId" PreviousIteration="this"/>
-                }
+                <TreeViewRecursive NodeId="@childId" PreviousIteration="this" Margin="8"/>
             }
         }
-    </li>
-</ol>
+    }
+</div>
 
 @code {
 
     [Parameter]
     public int NodeId { get; set; }
-    
+
     [Parameter]
     public EventCallback OnNodesChanged { get; set; }
     
     [Parameter]
+    public int Margin { get; set; }
+
+    [Parameter]
     public TreeViewRecursive? PreviousIteration { get; set; }
-    
+
     [CascadingParameter]
     public NodeService.Sort Sort { get; set; }
-    
+
     void Refresh()
     {
         StateHasChanged();

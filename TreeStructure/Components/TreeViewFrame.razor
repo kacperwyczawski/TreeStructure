@@ -5,7 +5,7 @@
 {
     foreach (var rootNodeId in SortedRootIds)
     {
-        <MudPaper Class="py-4 pr-5 my-5 mx-auto">
+        <MudPaper Class="pa-1 my-5 mx-auto">
             <TreeViewRecursive NodeId="@rootNodeId" OnNodesChanged="@Refresh"/>
         </MudPaper>
     }
