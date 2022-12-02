@@ -1,6 +1,6 @@
 ﻿namespace TreeStructure.Models;
 
-public class Node : INode
+public class Node
 {
     public int Id { get; set; }
     
