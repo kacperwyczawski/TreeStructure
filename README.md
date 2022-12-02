@@ -7,7 +7,7 @@
 
 ### How to run:
 
-1. `git clone https://gitlab.ideo.pl/k.wyczawski/tree-structure.git TreeStructure`
+1. `git clone https://github.com/kacperwyczawski/TreeStructure TreeStructure`
 2. `cd TreeStructure\TreeStructure`
 3. `dotnet ef database update`
 4. `dotnet run`
